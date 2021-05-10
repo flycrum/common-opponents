@@ -1,19 +1,22 @@
 import {
 	call,
 	put,
-	takeEvery,
+	take,
+	takeLatest,
 	StrictEffect,
 } from 'redux-saga/effects';
-import { setSchedules } from "./schedulesSlice";
+import { setSchedules } from './schedulesSlice';
 import mql from '../vendor/mql';
-import {
+import { REHYDRATE } from 'redux-persist';
+import type {
 	KeyOfScheduleApiResponseScheduleResultItem,
 	ScheduleApiResponse,
 } from '../types/scheduleApi';
 import { MqlNode } from '../types/mqlNode';
+import store from './store';
 
 export const sagaActions = {
-	FETCH_SCHEDULE_SAGA: 'FETCH_DATA_SAGA',
+	FETCH_SCHEDULE_SAGA: 'FETCH_SCHEDULE_SAGA',
 };
 
 export function* fetchScheduleSaga(): Generator<
@@ -87,6 +90,17 @@ export function* fetchScheduleSaga(): Generator<
 	}
 }
 
+
 export default function* rootSaga() {
-	yield takeEvery(sagaActions.FETCH_SCHEDULE_SAGA, fetchScheduleSaga);
+	// wait for rehydrated action (blocking)
+	yield take(REHYDRATE);
+
+	// if no schedule data resulted from rehydrating
+	if (!store.getState().schedule?.events?.length) {
+		// wait for fetch
+		yield call(fetchScheduleSaga);
+	}
+
+	// listen for action and execute fetch (non-blocking)
+	yield takeLatest(sagaActions.FETCH_SCHEDULE_SAGA, fetchScheduleSaga);
 }

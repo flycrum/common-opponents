@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ScheduleApiResponse } from '../types/scheduleApi';
+import type { ScheduleApiResponse } from '../types/scheduleApi';
 
 /**
  * Schedule and game events data that can later be joined with teams to further analyze.

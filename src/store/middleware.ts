@@ -10,7 +10,7 @@ import {
 	REGISTER,
 } from 'redux-persist';
 
-let sagaMiddleware = createSagaMiddleware();
+const sagaMiddleware = createSagaMiddleware();
 const middleware = [
 	...getDefaultMiddleware({
 		serializableCheck: {
