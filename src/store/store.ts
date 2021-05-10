@@ -1,30 +1,20 @@
-import { combineReducers } from 'redux';
 import { configureStore } from '@reduxjs/toolkit';
 import {
 	TypedUseSelectorHook,
 	useDispatch,
 	useSelector,
 } from 'react-redux';
-import {
-	persistReducer,
-	persistStore,
-} from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import { persistStore } from 'redux-persist';
 import middleware, { runMiddleware } from './middleware';
 import { schedulesSlice } from './schedulesSlice';
 import { teamsSlice } from './teamsSlice';
-
-const persistConfig = {
-	key: 'app-state',
-	version: 1,
-	storage,
-};
+import { configurePersist } from './storeHelpers';
 
 const store = configureStore({
-	reducer: persistReducer(persistConfig, combineReducers({
+	reducer: configurePersist({
 		schedule: schedulesSlice.reducer,
 		teams: teamsSlice.reducer,
-	})),
+	}),
 	middleware,
 });
 
