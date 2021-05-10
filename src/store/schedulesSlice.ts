@@ -1,5 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { ScheduleApiResponse } from '../types/scheduleApi';
+import { ScheduleApiResponseScheduleResultItem } from '../types/scheduleApi';
+
+
+export type ScheduleState = {
+	/** team's schedule stored by opponent id for easy lookup **/
+	schoolGamesByOppId: {
+		[teamId: string]: {[oppTeamId: string]: ScheduleApiResponseScheduleResultItem[]}
+	}, // todo - type
+};
 
 /**
  * Schedule and game events data that can later be joined with teams to further analyze.
@@ -7,11 +15,12 @@ import type { ScheduleApiResponse } from '../types/scheduleApi';
 export const schedulesSlice = createSlice({
 	name: 'schedules',
 	initialState: {
-		events: [] as ScheduleApiResponse['data']['schedule'],
+		schoolGamesByOppId: {} as ScheduleState['schoolGamesByOppId'],
 	},
 	reducers: {
-		setSchedules: (state, action: PayloadAction<ScheduleApiResponse['data']['schedule']>) => {
-			state.events = action.payload;
+		// setSchedules: (state, action: PayloadAction<ScheduleApiResponse['data']['schedule']>) => {
+		setSchedules: (state, action: PayloadAction<ScheduleState>) => {
+			state.schoolGamesByOppId = action.payload.schoolGamesByOppId;
 		}
 	},
 });

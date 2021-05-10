@@ -10,6 +10,7 @@ export type ScheduleApiResponse = {
 			url: string;
 			type: "png" | string;
 			size: number; // 12135,
+			size_pretty: string; // "12.1 kB"
 			height: number; // 228,
 			width: number; // 228
 		};
@@ -21,14 +22,17 @@ export type ScheduleApiResponse = {
 		url: string; // "https://www.sports-reference.com/cfb/years/2020-schedule.html"
 	};
 	headers: {
+		[key: string]: any;
 		age: string,
 		'x-cache': string,
 	};
 	response: {
+		body: any;
+		headers: {[key: string]: any};
 		url: string;
 		statusCode: 200 | number;
 		statusMessage: "" | string;
-	}
+	};
 	status: "success" | string;
 	statusCode: 200 | number;
 };
