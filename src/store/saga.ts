@@ -14,15 +14,19 @@ import type {
 } from '../types/scheduleApi';
 import { MqlNode } from '../types/mqlNode';
 import store from './store';
+import axios from 'axios';
+import { setTeams } from './teamsSlice';
+import { TeamApiResponse } from '../types/teamApi';
 
 export const sagaActions = {
 	FETCH_SCHEDULE_SAGA: 'FETCH_SCHEDULE_SAGA',
+	FETCH_TEAMS_SAGA: 'FETCH_TEAMS_SAGA',
 };
 
 export function* fetchScheduleSaga(): Generator<
-	StrictEffect,
-	any,
-	ScheduleApiResponse
+	StrictEffect, // yield
+	void, // return
+	ScheduleApiResponse // accept
 > {
 	try {
 		let result = yield call(
@@ -90,17 +94,38 @@ export function* fetchScheduleSaga(): Generator<
 	}
 }
 
+export function* fetchTeamsSaga(): Generator<
+	StrictEffect, // yield
+	void, // return
+	TeamApiResponse // accept
+> {
+	try {
+		let result = yield call(() => axios.request<any[]>({
+			url: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?groups=80&limit=2',
+		}));
+		yield put(setTeams(result.data?.sports?.[0].leagues?.[0].teams));
+	} catch(e) {
+		yield put({ type: `${sagaActions.FETCH_TEAMS_SAGA}_FAILED`, payload: e });
+	}
+}
 
 export default function* rootSaga() {
 	// wait for rehydrated action (blocking)
 	yield take(REHYDRATE);
 
 	// if no schedule data resulted from rehydrating
-	if (!store.getState().schedule?.events?.length) {
+	if (!store.getState().teams.schools?.length) {
+		// wait for fetch
+		yield call(fetchTeamsSaga);
+	}
+
+	// if no schedule data resulted from rehydrating
+	if (!store.getState().schedule.events?.length) {
 		// wait for fetch
 		yield call(fetchScheduleSaga);
 	}
 
 	// listen for action and execute fetch (non-blocking)
 	yield takeLatest(sagaActions.FETCH_SCHEDULE_SAGA, fetchScheduleSaga);
+	yield takeLatest(sagaActions.FETCH_TEAMS_SAGA, fetchTeamsSaga);
 }

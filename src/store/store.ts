@@ -12,9 +12,10 @@ import {
 import storage from 'redux-persist/lib/storage';
 import middleware, { runMiddleware } from './middleware';
 import { schedulesSlice } from './schedulesSlice';
+import { teamsSlice } from './teamsSlice';
 
 const persistConfig = {
-	key: 'root',
+	key: 'app-state',
 	version: 1,
 	storage,
 };
@@ -22,6 +23,7 @@ const persistConfig = {
 const store = configureStore({
 	reducer: persistReducer(persistConfig, combineReducers({
 		schedule: schedulesSlice.reducer,
+		teams: teamsSlice.reducer,
 	})),
 	middleware,
 });

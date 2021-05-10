@@ -50,11 +50,11 @@ export type ScheduleApiResponseScheduleResultItem = {
 	teamLoserPoints: number | null; // 35
 	teamWinnerName: string | null; // "Alabama-Birmingham"
 	teamWinnerPoints: number | null; // 45
-}
+};
 
 /**
  * An object type with the keys locked to the custom MQL query 'attr' names & the value assigned to generic param.
  */
 export type KeyOfScheduleApiResponseScheduleResultItem<V> = {
 	[key in keyof ScheduleApiResponseScheduleResultItem]: V;
-}
+};
