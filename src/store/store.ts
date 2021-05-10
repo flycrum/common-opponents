@@ -5,9 +5,17 @@ import {
 	useSelector,
 } from 'react-redux';
 
+import { schedulesSlice } from "./schedulesSlice";
+import middleware, { runMiddleware } from './middleware';
+
 const store = configureStore({
-	reducer: {},
+	reducer: {
+		schedule: schedulesSlice.reducer,
+	},
+	middleware,
 });
+
+runMiddleware();
 
 export default store;
 
