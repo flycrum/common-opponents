@@ -7,37 +7,22 @@ import {
 import { PersistGate } from 'redux-persist/integration/react';
 
 function App() {
-	const { schoolGamesByOppId } = useAppSelector(state => state.schedule);
+	const { results } = useAppSelector(state => state.apiGames);
 
 	return (
 		<div className="App">
 			<PersistGate loading={null} persistor={storePersistor}>
 				App
-				{Object.entries(schoolGamesByOppId).map(([teamId, oppsLookup], index, three) => {
-					return Object.entries(oppsLookup).map(([oppTeamId, events]) => {
-						return events.map((game) => {
-							if (teamId === 'Alabama') {
-								console.log('teamId: ', teamId, game.teamWinnerName);
-							}
-							return (
-								<p key={`${game.date}_${game.teamWinnerName}_${game.teamLoserName}`}>
-									{ teamId }
-									{ ' ' }
-									vs.
-									{ ' ' }
-									{ oppTeamId }
-									{ ' ' }
-									=
-									{ ' ' }
-									{ game.teamWinnerName === teamId ? game.teamWinnerPoints : game.teamLoserPoints }
-									{ ' ' }
-									-
-									{ ' ' }
-									{ game.teamLoserName === oppTeamId ? game.teamLoserPoints : game.teamWinnerPoints }
-								</p>
-							)
-						})
-					})
+				{Object.values(results).map(event => {
+					return (
+						<p key={`${event.date}_${event.teamWinnerName}_${event.teamLoserName}`}>
+							{ event.teamWinnerName }
+							{ ' ' }
+							vs.
+							{ ' ' }
+							{event.teamLoserName}
+						</p>
+					)
 				})}
 			</PersistGate>
 		</div>

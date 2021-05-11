@@ -1,6 +1,6 @@
-import type { LeagueApiResponse } from '../types/leagueApi';
+import type { ApiTeamsResponse } from '../types/apiTeams';
 
-export default function mockTeams(..._args: []): LeagueApiResponse {
+export default function mockTeams(..._args: []): ApiTeamsResponse {
 	return {
 		"data":
 			{

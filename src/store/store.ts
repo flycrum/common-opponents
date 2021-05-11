@@ -6,14 +6,14 @@ import {
 } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import middleware, { runMiddleware } from './middleware';
-import { schedulesSlice } from './schedulesSlice';
-import { leagueSlice } from './leagueSlice';
+import { apiGamesSlice } from './apiGamesSlice';
+import { apiTeamsSlice } from './apiTeamsSlice';
 import { configurePersist } from './storeHelpers';
 
 const store = configureStore({
 	reducer: configurePersist({
-		league: leagueSlice.reducer,
-		schedule: schedulesSlice.reducer,
+		apiTeams: apiTeamsSlice.reducer,
+		apiGames: apiGamesSlice.reducer,
 	}),
 	middleware,
 });

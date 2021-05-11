@@ -1,7 +1,7 @@
 /**
  * The ESPN API response for the FBS league (group 80) and team details.
  */
-export type LeagueApiResponse = {
+export type ApiTeamsResponse = {
 	config: {[key: string]: any};
 	data: {
 		sports: {
@@ -12,7 +12,7 @@ export type LeagueApiResponse = {
 				name: string; // "NCAA - Football"
 				shortName: string; // "NCAA Football"
 				slug: string; // "college-football"
-				teams: LeagueApiResponseTeams;
+				teams: ApiTeamsResponseTeamResults;
 				uid: string; // "s:20~l:23"
 			}[];
 			name: string; // "Football"
@@ -41,12 +41,12 @@ export type LeagueApiResponse = {
 /**
  * A list of all teams.
  */
-type LeagueApiResponseTeams = LeagueApiResponseTeamsItem[];
+type ApiTeamsResponseTeamResults = ApiTeamsResponseTeamItem[];
 
 /**
  * Team data.
  */
-export type LeagueApiResponseTeamsItem = {
+export type ApiTeamsResponseTeamItem = {
 	team: {
 		abbreviation: string; // "AUB"
 		alternateColor?: string; // "f1f2f3"
@@ -55,7 +55,8 @@ export type LeagueApiResponseTeamsItem = {
 		id: string; // "2"
 		isActive: boolean; // true
 		isAllStar: boolean; // false
-		links: {
+		// @REMOVE ON LOAD
+		links?: {
 			href: string; // "https://www.espn.com/college-football/team/_/id/2/auburn-tigers"
 			isExternal: boolean; // false
 			isPremium: boolean; // false
@@ -74,7 +75,8 @@ export type LeagueApiResponseTeamsItem = {
 		}[];
 		name: string; // "Tigers"
 		nickname: string; // "Auburn"
-		record: {
+		// @REMOVE ON LOAD
+		record?: {
 			items: {
 				stats: {
 					name: string; // playoffSeed

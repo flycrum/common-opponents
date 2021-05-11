@@ -1,7 +1,7 @@
 /**
- * The MQL response for scraping and returning general & schedule api results.
+ * The MQL response for scraping and returning general & games/schedule api results.
  */
-export type ScheduleApiResponse = {
+export type ApiGamesResponse = {
 	data: {
 		author: string | null;
 		date: string; // "2021-05-09T11:18:37.000Z"
@@ -17,7 +17,7 @@ export type ScheduleApiResponse = {
 		lang: "en" | string;
 		logo: string | null;
 		publisher: string | null;
-		schedule: ScheduleApiResponseScheduleResult;
+		schedule: ApiGamesResponseEventResults;
 		title: string | null; // "2020 Schedule and Results | College Football at Sports-Reference.com"
 		url: string; // "https://www.sports-reference.com/cfb/years/2020-schedule.html"
 	};
@@ -38,14 +38,14 @@ export type ScheduleApiResponse = {
 };
 
 /**
- * A list of the actual schedule results from MQL.
+ * A list of the actual games results from MQL.
  */
-type ScheduleApiResponseScheduleResult = ScheduleApiResponseScheduleResultItem[];
+export type ApiGamesResponseEventResults = ApiGamesResponseEventResultItem[];
 
 /**
  * Games within the schedule results.
  */
-export type ScheduleApiResponseScheduleResultItem = {
+export type ApiGamesResponseEventResultItem = {
 	atLoser: '@' | string | null;
 	boxscoreUrl: string | null; // "https://www.sports-reference.com/cfb/boxscores/2020-09-03-alabama-birmingham.html"
 	date: string | null; // "Sep 3, 2020"
@@ -59,6 +59,6 @@ export type ScheduleApiResponseScheduleResultItem = {
 /**
  * An object type with the keys locked to the custom MQL query 'attr' names & the value assigned to generic param.
  */
-export type KeyOfScheduleApiResponseScheduleResultItem<V> = {
-	[key in keyof ScheduleApiResponseScheduleResultItem]: V;
+export type ApiGamesResponseKeyOfResultItem<V> = {
+	[key in keyof ApiGamesResponseEventResultItem]: V;
 };
