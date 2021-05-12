@@ -1,5 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { ApiTeamsResponseTeamItem } from '../types/apiTeams';
+import type { AppState } from './store';
 
 /**
  * Original team list data that can later be joined with games to further analyze.
@@ -13,7 +14,12 @@ const teamsEntityAdapter = createEntityAdapter<ApiTeamsResponseTeamItem>({
 	selectId: (book) => book.team.nickname,
 	// Keep the "all IDs" array sorted based on team nickname
 	sortComparer: (a, b) => a.team.nickname.localeCompare(b.team.nickname),
-})
+});
+
+/**
+ * Entity convenience selectors like 'selectAll'.
+ */
+export const apiTeamsSelectors = teamsEntityAdapter.getSelectors<AppState>(state => state.apiTeams.results);
 
 /**
  * League / team data.

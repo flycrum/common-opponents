@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import {
 	TypedUseSelectorHook,
 	useDispatch,
@@ -9,11 +9,15 @@ import middleware, { runMiddleware } from './middleware';
 import { apiGamesSlice } from './apiGamesSlice';
 import { apiTeamsSlice } from './apiTeamsSlice';
 import { configurePersist } from './storeHelpers';
+import { simSlice } from './simSlice';
 
 const store = configureStore({
-	reducer: configurePersist({
-		apiTeams: apiTeamsSlice.reducer,
-		apiGames: apiGamesSlice.reducer,
+	reducer: combineReducers({
+		...configurePersist({
+			apiTeams: apiTeamsSlice.reducer,
+			apiGames: apiGamesSlice.reducer,
+		}),
+		sim: simSlice.reducer,
 	}),
 	middleware,
 });
