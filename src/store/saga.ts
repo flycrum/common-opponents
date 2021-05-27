@@ -269,7 +269,7 @@ export default function* rootSaga(): Generator<any, any, any> {
 	yield take(REHYDRATE);
 	// load initial data
 	yield call(loadInitialData);
-	// listen for action and execute fetch (non-blocking)
+	// listen for each action and execute fetch (non-blocking)
 	yield takeLatest(sagaActions.FETCH_SCHEDULE_SAGA, fetchScheduleSaga);
 	yield takeLatest(sagaActions.FETCH_TEAMS_SAGA, fetchTeamsSaga);
 }

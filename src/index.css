@@ -7,8 +7,9 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+body,
 #root {
-	position: absolute;
+	position: absolute !important;
 	left: 0;
 	right: 0;
 	top: 0;
