@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { ApiTeamsResponseTeamItem } from '../types/apiTeams';
+import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 
 /**
  * Simulation details like teams selected and other related options.

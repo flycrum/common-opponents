@@ -1,6 +1,6 @@
 import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { ApiTeamsResponseTeamItem } from '../types/apiTeams';
-import type { AppState } from './store';
+import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
+import type { AppState } from '../store';
 
 /**
  * Original team list data that can later be joined with games to further analyze.

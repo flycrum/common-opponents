@@ -6,10 +6,10 @@ import {
 } from 'react-redux';
 import { persistStore } from 'redux-persist';
 import middleware, { runMiddleware } from './middleware';
-import { apiGamesSlice } from './apiGamesSlice';
-import { apiTeamsSlice } from './apiTeamsSlice';
+import { apiGamesSlice } from './slices/apiGamesSlice';
+import { apiTeamsSlice } from './slices/apiTeamsSlice';
 import { configurePersist } from './storeHelpers';
-import { simSlice } from './simSlice';
+import { simSlice } from './slices/simSlice';
 
 const store = configureStore({
 	reducer: combineReducers({

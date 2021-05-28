@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ApiGamesResponseEventResultItem } from '../types/apiGames';
+import { ApiGamesResponseEventResultItem } from '../../types/apiGames';
 
 
 export type ScheduleState = {

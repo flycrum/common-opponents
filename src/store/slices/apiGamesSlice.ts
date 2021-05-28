@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { ApiGamesResponseEventResults } from '../types/apiGames';
+import type { ApiGamesResponseEventResults } from '../../types/apiGames';
 
 /**
  * Original game events data that can later be joined with teams to further analyze.
