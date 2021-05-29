@@ -110,23 +110,18 @@ export const FaceoffScreen = () => {
 						/>
 					</Tooltip>
 					{team1 && (
-						<Tooltip
-							label="Find common opponents"
-							openDelay={1000}
+						<IconButton
+							p={'4'}
+							size="lg"
+							isRound
+							colorScheme={'yellow'}
+							aria-label="Find common opponents"
+							onClick={() => history.push(routePaths.RESULTS)}
 						>
-							<IconButton
-								p={'4'}
-								size="lg"
-								isRound
-								colorScheme={'yellow'}
-								aria-label="Find common opponents"
-								onClick={() => history.push(routePaths.RESULTS)}
-							>
-								<span>
-									GO!
-								</span>
-							</IconButton>
-						</Tooltip>
+							<span>
+								GO!
+							</span>
+						</IconButton>
 					)}
 				</ButtonGroup>
 			</VStack>
