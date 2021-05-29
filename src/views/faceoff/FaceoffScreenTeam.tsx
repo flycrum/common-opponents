@@ -28,36 +28,31 @@ export const FaceoffScreenTeam = ({
 		colSpan={colSpan}
 		justifySelf={'center'}
 	>
-		<Tooltip
-			label={`Choose a team`}
-			openDelay={1000}
+		<Button
+			size="md"
+			height="48px"
+			width="200px"
+			p={'0'}
+			backgroundColor={'transparent'}
+			border="2px"
+			borderStyle={'dashed'}
+			borderWidth={'thin'}
+			borderRadius={'lg'}
+			fontSize={'xl'}
 		>
-			<Button
-				size="md"
-				height="48px"
-				width="200px"
-				p={'0'}
-				backgroundColor={'transparent'}
-				border="2px"
-				borderStyle={'dashed'}
-				borderWidth={'thin'}
-				borderRadius={'lg'}
-				fontSize={'xl'}
-			>
-				{team
-					? (
-						<TeamLogo
-							url={team.team.logos[0]?.href}
-							width={TEAMS_LIST_ROW_HEIGHT * 3}
-						/>
-					)
-					: (
-						<>
-							Select Team
-						</>
-					)
-				}
-			</Button>
-		</Tooltip>
+			{team
+				? (
+					<TeamLogo
+						url={team.team.logos[0]?.href}
+						width={TEAMS_LIST_ROW_HEIGHT * 3}
+					/>
+				)
+				: (
+					<>
+						Select Team
+					</>
+				)
+			}
+		</Button>
 	</GridItem>
 );
