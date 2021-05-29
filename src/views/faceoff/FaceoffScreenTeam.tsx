@@ -38,6 +38,7 @@ export const FaceoffScreenTeam = ({
 			borderStyle={'dashed'}
 			borderWidth={'thin'}
 			borderRadius={'lg'}
+			fontSize={'xl'}
 		>
 			{team
 				? (

@@ -5,12 +5,22 @@ import App from './App';
 import store from './store/store';
 import { Provider } from 'react-redux';
 import { ColorModeScript } from '@chakra-ui/react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
+
+// Should be null because we haven't modified the history stack yet
+// console.log(`History.state before pushState: ${window.location.href}`, JSON.stringify(window.history.state));
+
+// clear out state as we don't want it to persist when app is refreshed or coming in cold
+// note: modals use 'state' to more easily navigate routing without refreshes leading to weird in-between states
+window.history.replaceState({}, document.title, window.location.href);
 
 ReactDOM.render(
 	<Provider store={store}>
-		<ColorModeScript />
-		<App/>
+		<Router>
+			<ColorModeScript />
+			<App/>
+		</Router>
 	</Provider>,
 	document.getElementById('root'),
 );

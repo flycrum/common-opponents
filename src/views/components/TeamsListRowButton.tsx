@@ -2,6 +2,7 @@ import React from 'react';
 import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 import { Button, HStack, Text } from '@chakra-ui/react';
 import { TeamLogo } from './TeamLogo';
+import { useResponsiveLogoHeightX } from '../../helpers/useResponsiveLogoHeightX';
 
 interface Props {
 	onClick?: () => void,
@@ -19,29 +20,33 @@ export const TeamsListRowButton = ({
 	onClick,
 	rowHeight,
 	team,
-}: Props) => (
-	<Button
-		onClick={onClick}
-		height={rowHeight}
-		overflow={'hidden'}
-		width={'full'}
-		backgroundColor={'transparent'}
-		borderRadius={'none'}
-	>
-		{team && (
-			<HStack
-				height={'full'}
-				width={'full'}
-				justifyContent={'flex-start'}
-			>
-				<TeamLogo
-					url={team.team.logos[0]?.href}
-					width={rowHeight * 3}
-				/>
-				<Text as={'p'}>
-					{ team.team.displayName }
-				</Text>
-			</HStack>
-		)}
-	</Button>
-);
+}: Props) => {
+	const rowHeightMultiplier = useResponsiveLogoHeightX();
+
+	return (
+		<Button
+			onClick={onClick}
+			height={rowHeight}
+			overflow={'hidden'}
+			width={'full'}
+			backgroundColor={'transparent'}
+			borderRadius={'none'}
+		>
+			{team && (
+				<HStack
+					height={'full'}
+					width={'full'}
+					justifyContent={'flex-start'}
+				>
+					<TeamLogo
+						url={team.team.logos[0]?.href}
+						width={rowHeight * rowHeightMultiplier}
+					/>
+					<Text as={'p'}>
+						{ team.team.displayName }
+					</Text>
+				</HStack>
+			)}
+		</Button>
+	)
+};

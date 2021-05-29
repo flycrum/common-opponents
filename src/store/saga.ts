@@ -5,7 +5,7 @@ import {
 	takeLatest,
 	StrictEffect,
 } from 'redux-saga/effects';
-import { setApiGameResults } from './apiGamesSlice';
+import { setApiGameResults } from './slices/apiGamesSlice';
 import mql from '../vendor/mql';
 import { REHYDRATE } from 'redux-persist';
 import type {
@@ -14,7 +14,7 @@ import type {
 } from '../types/apiGames';
 import store from './store';
 import axios from 'axios';
-import { setApiTeamResults } from './apiTeamsSlice';
+import { setApiTeamResults } from './slices/apiTeamsSlice';
 import { ApiTeamsResponse } from '../types/apiTeams';
 import { MqlNode } from '../types/mqlNode';
 

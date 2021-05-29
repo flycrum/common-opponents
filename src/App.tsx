@@ -8,8 +8,22 @@ import {
 import 'react-virtualized/styles.css';
 import { FaceoffScreen } from './views/faceoff/FaceoffScreen';
 import { ThemeSwitcher } from './utils/ThemeSwitcher';
+import {
+	Switch,
+	Redirect,
+	Route,
+	useLocation,
+} from 'react-router-dom';
+import type  { LocationState } from './types/LocationState';
+import { TeamsList } from './views/components/TeamsList';
+import { routePaths } from './consts/routePaths';
 
 function App() {
+	const location = useLocation<LocationState>();
+
+	// if history consists of modal state
+	const modalBackLocation = location.state?.modalBackLocation;
+
 	return (
 		<PersistGate
 			loading={null}
@@ -17,7 +31,48 @@ function App() {
 		>
 			<ChakraProvider theme={theme}>
 				<ThemeSwitcher justifySelf="flex-end"/>
-				<FaceoffScreen />
+				<Switch location={modalBackLocation || location}>
+					<Route
+						exact={true}
+						path={routePaths.HOME_FACEOFF}
+						component={FaceoffScreen}
+					/>
+					<Route
+						exact
+						path={routePaths.TEAM_SELECT_MODAL}
+						render={() => (
+							modalBackLocation
+								? (
+									<FaceoffScreen />
+								)
+								: (
+									<Redirect
+										to={{
+											pathname: routePaths.HOME_FACEOFF,
+											state: undefined,
+										}}
+									/>
+								)
+						)}
+					/>
+					<Route
+						exact={true}
+						path={routePaths.RESULTS}
+						component={FaceoffScreen}
+					/>
+					{/* Not Found */}
+					<Route path="*">
+						<Redirect
+							to={{
+								pathname: routePaths.HOME_FACEOFF,
+								state: undefined,
+							}}
+						/>
+					</Route>
+				</Switch>
+				{modalBackLocation && (
+					<Route path={routePaths.TEAM_SELECT_MODAL} children={<TeamsList />} />
+				)}
 			</ChakraProvider>
 		</PersistGate>
 	);
