@@ -1,5 +1,16 @@
 import React from 'react';
-import { Button, GridItem, Heading, IconButton, SimpleGrid, Text, VStack } from '@chakra-ui/react';
+import {
+	Box,
+	Button,
+	ButtonGroup,
+	GridItem,
+	Heading,
+	IconButton,
+	SimpleGrid,
+	Text,
+	Tooltip,
+	VStack
+} from '@chakra-ui/react';
 import { useAppSelector } from '../../store/store';
 import { FaceoffScreenTeam } from './FaceoffScreenTeam';
 import {
@@ -8,9 +19,11 @@ import {
 } from 'react-router-dom';
 import type { LocationState } from '../../types/LocationState';
 import { routePaths } from '../../consts/routePaths';
+import { FaDice } from 'react-icons/fa';
 
 /**
  * This is the primary select teams screen (home).
+ * @todo this component is too large and complex
  */
 export const FaceoffScreen = () => {
 	const history = useHistory();
@@ -62,31 +75,13 @@ export const FaceoffScreen = () => {
 						justifyContent={'center'}
 						onClick={() => {}}
 					>
-						{team1 && team2
-							? (
-								<IconButton
-									p={'4'}
-									size="lg"
-									isRound
-									colorScheme={'yellow'}
-									aria-label="Search"
-									onClick={() => history.push(routePaths.RESULTS)}
-								>
-									<span>
-										FIND!
-									</span>
-								</IconButton>
-							)
-							: (
-								<Text
-									as="i"
-									fontSize="l"
-									userSelect={'none'}
-								>
-									vs.
-								</Text>
-							)
-						}
+						<Text
+							as="i"
+							fontSize="l"
+							userSelect={'none'}
+						>
+							vs
+						</Text>
 					</GridItem>
 					<FaceoffScreenTeam
 						colSpan={2}
@@ -94,6 +89,46 @@ export const FaceoffScreen = () => {
 						team={team2}
 					/>
 				</SimpleGrid>
+				<ButtonGroup
+					variant="outline"
+					width={'full'}
+					alignItems={'center'}
+					justifyContent={team1 && team2 ? 'space-between' : 'center'}
+				>
+					<Tooltip
+						label="Randomize teams"
+						openDelay={1000}
+					>
+						<IconButton
+							p={'4'}
+							size="lg"
+							isRound
+							colorScheme={'white'}
+							onClick={() => {}}
+							icon={<FaDice />}
+							aria-label={'Randomize teams'}
+						/>
+					</Tooltip>
+					{team1 && (
+						<Tooltip
+							label="Find common opponents"
+							openDelay={1000}
+						>
+							<IconButton
+								p={'4'}
+								size="lg"
+								isRound
+								colorScheme={'yellow'}
+								aria-label="Find common opponents"
+								onClick={() => history.push(routePaths.RESULTS)}
+							>
+								<span>
+									GO!
+								</span>
+							</IconButton>
+						</Tooltip>
+					)}
+				</ButtonGroup>
 			</VStack>
 		</VStack>
 	);

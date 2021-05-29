@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { apiTeamsSelectors } from '../../store/slices/apiTeamsSlice';
 import { simActions } from '../../store/slices/simSlice';

@@ -1,7 +1,7 @@
 import React from 'react';
 import {
 	Button,
-	GridItem,
+	GridItem, Tooltip,
 } from '@chakra-ui/react';
 import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 import { TeamLogo } from '../components/TeamLogo';
@@ -28,31 +28,36 @@ export const FaceoffScreenTeam = ({
 		colSpan={colSpan}
 		justifySelf={'center'}
 	>
-		<Button
-			size="md"
-			height="48px"
-			width="200px"
-			p={'0'}
-			backgroundColor={'transparent'}
-			border="2px"
-			borderStyle={'dashed'}
-			borderWidth={'thin'}
-			borderRadius={'lg'}
-			fontSize={'xl'}
+		<Tooltip
+			label={`Choose a team`}
+			openDelay={1000}
 		>
-			{team
-				? (
-					<TeamLogo
-						url={team.team.logos[0]?.href}
-						width={TEAMS_LIST_ROW_HEIGHT * 3}
-					/>
-				)
-				: (
-					<>
-						Select Team
-					</>
-				)
-			}
-		</Button>
+			<Button
+				size="md"
+				height="48px"
+				width="200px"
+				p={'0'}
+				backgroundColor={'transparent'}
+				border="2px"
+				borderStyle={'dashed'}
+				borderWidth={'thin'}
+				borderRadius={'lg'}
+				fontSize={'xl'}
+			>
+				{team
+					? (
+						<TeamLogo
+							url={team.team.logos[0]?.href}
+							width={TEAMS_LIST_ROW_HEIGHT * 3}
+						/>
+					)
+					: (
+						<>
+							Select Team
+						</>
+					)
+				}
+			</Button>
+		</Tooltip>
 	</GridItem>
 );
