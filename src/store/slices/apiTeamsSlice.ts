@@ -1,4 +1,8 @@
-import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+	createEntityAdapter,
+	createSlice,
+	PayloadAction,
+} from '@reduxjs/toolkit';
 import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 import type { AppState } from '../store';
 
@@ -17,11 +21,6 @@ const teamsEntityAdapter = createEntityAdapter<ApiTeamsResponseTeamItem>({
 });
 
 /**
- * Entity convenience selectors like 'selectAll'.
- */
-export const apiTeamsSelectors = teamsEntityAdapter.getSelectors<AppState>(state => state.apiTeams.results);
-
-/**
  * League / team data.
  */
 export const apiTeamsSlice = createSlice({
@@ -35,5 +34,10 @@ export const apiTeamsSlice = createSlice({
 		}
 	},
 });
+
+/**
+ * Entity convenience selectors like 'selectAll'.
+ */
+export const apiTeamsSelectors = teamsEntityAdapter.getSelectors<AppState>(state => state.apiTeams.results);
 
 export const { setApiTeamResults } = apiTeamsSlice.actions;

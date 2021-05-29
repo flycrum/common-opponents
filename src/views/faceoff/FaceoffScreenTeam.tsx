@@ -1,7 +1,7 @@
 import React from 'react';
 import {
 	Button,
-	GridItem, Tooltip,
+	GridItem,
 } from '@chakra-ui/react';
 import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 import { TeamLogo } from '../components/TeamLogo';

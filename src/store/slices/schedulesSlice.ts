@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ApiGamesResponseEventResultItem } from '../../types/apiGames';
+import type { ApiGamesResponseEventResultItem } from '../../types/apiGames';
 
 /**
  * Team's schedule stored by opponent id for easy lookup.

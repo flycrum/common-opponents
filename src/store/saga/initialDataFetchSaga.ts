@@ -1,5 +1,5 @@
 import { call, put, StrictEffect } from 'redux-saga/effects';
-import { ApiGamesResponse, ApiGamesResponseKeyOfResultItem } from '../../types/apiGames';
+import type { ApiGamesResponse, ApiGamesResponseKeyOfResultItem } from '../../types/apiGames';
 import mql from '../../vendor/mql';
 import { MqlNode } from '../../types/mqlNode';
 import { setApiGameResults } from '../slices/apiGamesSlice';
@@ -18,7 +18,7 @@ export function* fetchAllGamesSaga(): Generator<
 	StrictEffect, // yield
 	void, // return
 	ApiGamesResponse // accept
-	> {
+> {
 	try {
 		let result: ApiGamesResponse = yield call(
 			isMock ? getMockScheduleFn : mql,
