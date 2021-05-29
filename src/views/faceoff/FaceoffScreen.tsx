@@ -70,6 +70,7 @@ export const FaceoffScreen = () => {
 									isRound
 									colorScheme={'yellow'}
 									aria-label="Search"
+									onClick={() => history.push(routePaths.RESULTS)}
 								>
 									<span>
 										FIND!

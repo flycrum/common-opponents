@@ -17,6 +17,7 @@ import {
 import type  { LocationState } from './types/LocationState';
 import { TeamsList } from './views/components/TeamsList';
 import { routePaths } from './consts/routePaths';
+import { ResultsScreen } from './views/results/ResultsScreen';
 
 function App() {
 	const location = useLocation<LocationState>();
@@ -58,7 +59,7 @@ function App() {
 					<Route
 						exact={true}
 						path={routePaths.RESULTS}
-						component={FaceoffScreen}
+						component={ResultsScreen}
 					/>
 					{/* Not Found */}
 					<Route path="*">
