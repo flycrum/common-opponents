@@ -1,6 +1,6 @@
 import { getDefaultMiddleware } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
-import saga from './saga';
+import saga from './saga/saga';
 import {
 	FLUSH,
 	REHYDRATE,
