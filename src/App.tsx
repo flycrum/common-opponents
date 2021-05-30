@@ -7,7 +7,7 @@ import {
 } from '@chakra-ui/react';
 import 'react-virtualized/styles.css';
 import { FaceoffScreen } from './views/faceoff/FaceoffScreen';
-import { ThemeSwitcher } from './utils/ThemeSwitcher';
+import { ThemeSwitcher } from './views/components/ThemeSwitcher';
 import {
 	Switch,
 	Redirect,

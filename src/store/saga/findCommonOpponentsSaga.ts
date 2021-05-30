@@ -1,9 +1,10 @@
-import { put, StrictEffect } from 'redux-saga/effects';
+import { call, put, StrictEffect } from 'redux-saga/effects';
 import { sagaActions } from './saga';
 import store from '../store';
 import { simActions } from '../slices/simSlice';
 import type { SchedulesState } from '../slices/schedulesSlice';
 import { BREADCRUMB_DELIMITER } from '../../consts/BREADCRUMB_DELIMITER';
+import { timeout } from '../../utils/timeoutPromise';
 
 /**
  * A data node that represents the pathway of related opponents that potentially connects the target teams.
@@ -32,13 +33,13 @@ type SearchablePathwayNode = {
  * @param results
  // * @param nextDepthSiblings
  */
-function recursivelySearchForCommonOpponents(
+async function recursivelySearchForCommonOpponents(
 	targetOpponentId: string,
 	allTeamSchedules: SchedulesState,
 	currentLevelPathwayNodes: SearchablePathwayNode[],
 	level: number,
 	results: string[],
-): string[] {
+): Promise<string[]> {
 	const nextLevelPathwayNodes: SearchablePathwayNode[] = [];
 
 	// iterate over the possible opponents pathways for this level
@@ -75,8 +76,10 @@ function recursivelySearchForCommonOpponents(
 
 	// now that we have flattened list of the next levels pathway nodes
 	if (nextLevelPathwayNodes.length) {
+		// wait for timeout to break up thread blocking logic (not a perfect system, consider worker thread later)
+		await timeout();
 		// process next level of potential opponent matches
-		recursivelySearchForCommonOpponents(
+		await recursivelySearchForCommonOpponents(
 			targetOpponentId,
 			allTeamSchedules,
 			nextLevelPathwayNodes,
@@ -114,8 +117,11 @@ export function* findCommonOpponents(): Generator<
 		const processedTeamsLookup = new Set<string>();
 		processedTeamsLookup.add(team1!.team.nickname);
 
+		console.log('start search');
+		const start = Date.now();
+
 		// kickoff recursive search
-		const results = recursivelySearchForCommonOpponents(
+		const results = yield call(recursivelySearchForCommonOpponents,
 			team2!.team.nickname,
 			allTeamSchedules,
 			[{
@@ -127,6 +133,8 @@ export function* findCommonOpponents(): Generator<
 			0,
 			[],
 		);
+
+		console.log('results took: ', (Date.now() - start) / 1000);
 
 		yield put(setResults(results));
 	} catch(e) {
