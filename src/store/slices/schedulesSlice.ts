@@ -26,7 +26,7 @@ import type { ApiGamesResponseEventResultItem } from '../../types/apiGames';
  *		...,
  * }
  */
-export type TeamSchedulesState = {
+export type SchedulesState = {
 	[teamId: string]: {[oppTeamId: string]: ApiGamesResponseEventResultItem[]};
 };
 
@@ -35,10 +35,10 @@ export type TeamSchedulesState = {
  */
 export const schedulesSlice = createSlice({
 	name: 'schedules',
-	initialState: {} as TeamSchedulesState,
+	initialState: {} as SchedulesState,
 	reducers: {
 		// setApiGameResults: (state, action: PayloadAction<ScheduleApiResponse['data']['schedule']>) => {
-		setTeamSchedules: (state, action: PayloadAction<TeamSchedulesState>) => {
+		setTeamSchedules: (state, action: PayloadAction<SchedulesState>) => {
 			return action.payload;
 		}
 	},

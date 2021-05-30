@@ -7,12 +7,12 @@ import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 export const simSlice = createSlice({
 	name: 'sim',
 	initialState: {
-		results: null,
+		results: null as string[] | null,
 		team1: null as ApiTeamsResponseTeamItem | null,
 		team2: null as ApiTeamsResponseTeamItem | null,
 	},
 	reducers: {
-		setResults: (state, action: PayloadAction<null>) => {
+		setResults: (state, action: PayloadAction<string[] | null>) => {
 			state.results = action.payload;
 		},
 		setSimTeam1: (state, action: PayloadAction<ApiTeamsResponseTeamItem>) => {

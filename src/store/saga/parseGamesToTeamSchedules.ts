@@ -2,7 +2,8 @@ import { put, StrictEffect } from 'redux-saga/effects';
 import type { ApiGamesResponse, ApiGamesResponseEventResults } from '../../types/apiGames';
 import { sagaActions } from './saga';
 import store from '../store';
-import { setTeamSchedules, TeamSchedulesState } from '../slices/schedulesSlice';
+import { setTeamSchedules } from '../slices/schedulesSlice';
+import type { SchedulesState } from '../slices/schedulesSlice';
 
 /**
  * Converts team nickname discrepancies from `Sports Reference` to `ESPN`.
@@ -56,7 +57,7 @@ function convertToTeamEntityNickname(nickname: string) {
 /**
  * Parsed and restructure all games raw data as 'by Team' schedule lookup tables.
  */
-export function* parseGamesAndGenerateTeamSchedules(allGamesResult: ApiGamesResponseEventResults): Generator<
+export function* parseGamesToTeamSchedules(allGamesResult: ApiGamesResponseEventResults): Generator<
 	StrictEffect, // yield
 	void, // return
 	ApiGamesResponse // accept
@@ -123,22 +124,18 @@ export function* parseGamesAndGenerateTeamSchedules(allGamesResult: ApiGamesResp
 			},
 			{
 				schoolGamesByOppId: {},
-			} as TeamSchedulesState,
+			} as SchedulesState,
 		)
 
-		// console.log('teamsAdapter.length: ', teamsAdapter.ids.length);
-		// console.log('transformedResult: ', transformedResult);
-		// console.log('schoolGamesByOppId.length: ', Object.keys(transformedResult).length);
-
-		teamsAdapter.ids.forEach((nickname) => {
-			if (!transformedResult[nickname]) {
-				// console.log('not found: ', nickname);
-			}
-		});
+		// teamsAdapter.ids.forEach((nickname) => {
+		// 	if (!transformedResult[nickname]) {
+		// 		console.log('not found: ', nickname);
+		// 	}
+		// });
 
 		yield put(setTeamSchedules(transformedResult));
 	} catch(e) {
 		// todo - handle
-		yield put({ type: `${sagaActions.PARSE_TEAM_SCHEDULES}_FAILED`, payload: e });
+		yield put({ type: `${sagaActions.PARSE_GAMES_TO_TEAM_SCHEDULES}_FAILED`, payload: e });
 	}
 }

@@ -3,7 +3,7 @@ import type { ApiGamesResponse, ApiGamesResponseKeyOfResultItem } from '../../ty
 import mql from '../../vendor/mql';
 import { MqlNode } from '../../types/mqlNode';
 import { setApiGameResults } from '../slices/apiGamesSlice';
-import { parseGamesAndGenerateTeamSchedules } from './teamSchedulesSaga';
+import { parseGamesToTeamSchedules } from './parseGamesToTeamSchedules';
 import { ApiTeamsResponse } from '../../types/apiTeams';
 import axios from 'axios';
 import { setApiTeamResults } from '../slices/apiTeamsSlice';
@@ -82,9 +82,9 @@ export function* fetchAllGamesSaga(): Generator<
 		} else {
 			yield put(setApiGameResults(allGamesResult));
 
-			// load initial data
+			// now that we have all raw api data, let's pre-process some of the non-changing overhead for generating results
 			// todo - would like to move this to saga flow rather than this nested call (need to test prev fails so this wouldn't run)
-			yield call(parseGamesAndGenerateTeamSchedules, allGamesResult);
+			yield call(parseGamesToTeamSchedules, allGamesResult);
 		}
 	} catch(e) {
 		// todo - handle

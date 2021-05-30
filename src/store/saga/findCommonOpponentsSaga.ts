@@ -1,0 +1,136 @@
+import { put, StrictEffect } from 'redux-saga/effects';
+import { sagaActions } from './saga';
+import store from '../store';
+import { simActions } from '../slices/simSlice';
+import type { SchedulesState } from '../slices/schedulesSlice';
+import { BREADCRUMB_DELIMITER } from '../../consts/BREADCRUMB_DELIMITER';
+
+/**
+ * A data node that represents the pathway of related opponents that potentially connects the target teams.
+ *
+ */
+type SearchablePathwayNode = {
+	/**
+	 * Traversal path of opponent ids used to track paths, lookup individual points along the way.
+	 * Note: we use a string here because making copies of it and searching within it for partial matches is cheap.
+	 */
+	breadcrumbIds: string;
+	/**
+	 * The next/current/last opponent id in the pathway.
+	 */
+	nextTeamId: string;
+}
+
+/**
+ * In-order traversal of team opponents lookup tables to find non-circular common opponents up to nth degree/level.
+ * Note: this does not actually use a tree struct with nodes but virtually constructs a viable alternative.
+ * [Tree traversal]{@link https://en.wikipedia.org/wiki/Tree_traversal}
+ * @param targetOpponentId The id of the opponent that we're trying to find a match with (aka team2).
+ * @param allTeamSchedules Master lookup table for all the opponents a team directly played in the given year.
+ * @param currentLevelPathwayNodes Nodes to search at the current level (as an array, in-order traversal is much easier!).
+ * @param level The current search depth (0-based because we start with team1 alone in the first depth search).
+ * @param results
+ // * @param nextDepthSiblings
+ */
+function recursivelySearchForCommonOpponents(
+	targetOpponentId: string,
+	allTeamSchedules: SchedulesState,
+	currentLevelPathwayNodes: SearchablePathwayNode[],
+	level: number,
+	results: string[],
+): string[] {
+	const nextLevelPathwayNodes: SearchablePathwayNode[] = [];
+
+	// iterate over the possible opponents pathways for this level
+	for (const pathwayNode of currentLevelPathwayNodes) {
+		// console.log(new Array(level * 4).join(' '), level, 'opponentId: ', oppBreadcrumb.opponentId);
+		if (pathwayNode.nextTeamId === targetOpponentId) {
+			// ! FOUND COMMON OPPONENT !
+			results.push(pathwayNode.breadcrumbIds);
+			// skip to next iteration since we don't want to process children of already established connection
+			// this is necessary to avoid redundant results like:
+			// ex1: Alabama >> Notre Dame >> Alabama >> Notre Dame
+			// ex2: Alabama >> Notre Dame >> Duke >> Notre Dame
+			continue;
+		}
+
+		if (level < 5) {
+			let nextTeamOpponents = allTeamSchedules[pathwayNode.nextTeamId];
+
+			for (const nestedOpponentId in nextTeamOpponents) {
+				if (!pathwayNode.breadcrumbIds.includes(`${BREADCRUMB_DELIMITER}${nestedOpponentId}${BREADCRUMB_DELIMITER}`)
+					&& nextTeamOpponents.hasOwnProperty(nestedOpponentId)
+				) {
+					// console.log(new Array(level * 4).join(' '), level, '⎣ nestedOpponentId: ', nestedOpponentId);
+					nextLevelPathwayNodes.push({
+						// append to breadcrumbs of potential common opponents
+						// add trailing delimiter to make it easier to accurately search on string without split or regex
+						breadcrumbIds: `${pathwayNode.breadcrumbIds}${nestedOpponentId}${BREADCRUMB_DELIMITER}`,
+						nextTeamId: nestedOpponentId,
+					});
+				}
+			}
+		}
+	}
+
+	// now that we have flattened list of the next levels pathway nodes
+	if (nextLevelPathwayNodes.length) {
+		// process next level of potential opponent matches
+		recursivelySearchForCommonOpponents(
+			targetOpponentId,
+			allTeamSchedules,
+			nextLevelPathwayNodes,
+			level + 1,
+			results,
+		);
+	}
+
+	// remove leading and trailing delimiters
+	results = results.map((resultItem) => {
+		// split on the delimiter
+		let breadcrumbsList = resultItem.split(BREADCRUMB_DELIMITER)
+		// remove leading delimiter
+		breadcrumbsList.shift();
+		// remove trailing delimiter
+		breadcrumbsList.pop();
+
+		return breadcrumbsList.join(BREADCRUMB_DELIMITER);
+	});
+
+	return results;
+}
+
+export function* findCommonOpponents(): Generator<
+	StrictEffect, // yield
+	void, // return
+	any // accept
+> {
+	try {
+		const state = store.getState();
+		const { setResults } = simActions;
+		const { team1, team2 } = state.sim;
+		const allTeamSchedules = state.schedules;
+		// todo - these bangs are bad!
+		const processedTeamsLookup = new Set<string>();
+		processedTeamsLookup.add(team1!.team.nickname);
+
+		// kickoff recursive search
+		const results = recursivelySearchForCommonOpponents(
+			team2!.team.nickname,
+			allTeamSchedules,
+			[{
+				// pre-populate breadcrumbs with team1
+				// include leading delimiter to more easily search for teams within string without using 'split'
+				breadcrumbIds: `${BREADCRUMB_DELIMITER}${team1!.team.nickname}${BREADCRUMB_DELIMITER}`,
+				nextTeamId: team1!.team.nickname,
+			}],
+			0,
+			[],
+		);
+
+		yield put(setResults(results));
+	} catch(e) {
+		// todo - handle
+		yield put({ type: `${sagaActions.FIND_COMMON_OPPONENTS}_FAILED`, payload: e });
+	}
+}

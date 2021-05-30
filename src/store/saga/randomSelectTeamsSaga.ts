@@ -12,6 +12,11 @@ import { simActions } from '../slices/simSlice';
 export function selectRandomTeam (excludeTeam?: ApiTeamsResponseTeamItem) {
 	let allTeams = [...apiTeamsSelectors.selectAll(store.getState())];
 
+	// todo - remove
+	// return excludeTeam ? allTeams[22] : allTeams[2];
+	// return excludeTeam ? allTeams[22] : allTeams[2];
+	// return excludeTeam ? allTeams[73] : allTeams[2];
+
 	if (excludeTeam) {
 		// find index of team we want to exclude
 		const removeIndex = allTeams.indexOf(excludeTeam);
