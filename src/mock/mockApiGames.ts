@@ -1,6 +1,6 @@
 import type { ApiGamesResponse } from '../types/apiGames';
 
-export default function mockSchedule(..._args: any[]): ApiGamesResponse {
+export function mockApiGames(..._args: any[]): ApiGamesResponse {
 	return {
 		"status": "success",
 		"data": {

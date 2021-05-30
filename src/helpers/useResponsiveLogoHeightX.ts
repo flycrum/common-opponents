@@ -7,7 +7,7 @@ export function useResponsiveLogoHeightX () {
 	return useBreakpointValue(
 		{
 			base: 0.5,
-			sm: 3,
+			sm: 2,
 		}
 	) ?? 3;
 }

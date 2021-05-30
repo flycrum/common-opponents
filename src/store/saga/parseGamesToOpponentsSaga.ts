@@ -2,8 +2,8 @@ import { put, StrictEffect } from 'redux-saga/effects';
 import type { ApiGamesResponse, ApiGamesResponseEventResults } from '../../types/apiGames';
 import { sagaActions } from './saga';
 import store from '../store';
-import { setTeamSchedules } from '../slices/schedulesSlice';
-import type { SchedulesState } from '../slices/schedulesSlice';
+import { setTeamSchedules } from '../slices/opponentsSlice';
+import type { OpponentsLookupByTeam } from '../../types/OpponentsLookupByTeam';
 
 /**
  * Converts team nickname discrepancies from `Sports Reference` to `ESPN`.
@@ -57,7 +57,7 @@ function convertToTeamEntityNickname(nickname: string) {
 /**
  * Parsed and restructure all games raw data as 'by Team' schedule lookup tables.
  */
-export function* parseGamesToTeamSchedules(allGamesResult: ApiGamesResponseEventResults): Generator<
+export function* parseGamesToOpponentsSaga(allGamesResult: ApiGamesResponseEventResults): Generator<
 	StrictEffect, // yield
 	void, // return
 	ApiGamesResponse // accept
@@ -124,7 +124,7 @@ export function* parseGamesToTeamSchedules(allGamesResult: ApiGamesResponseEvent
 			},
 			{
 				schoolGamesByOppId: {},
-			} as SchedulesState,
+			} as OpponentsLookupByTeam,
 		)
 
 		// teamsAdapter.ids.forEach((nickname) => {

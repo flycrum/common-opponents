@@ -1,6 +1,6 @@
 import type { ApiTeamsResponse } from '../types/apiTeams';
 
-export default function mockTeams(..._args: []): ApiTeamsResponse {
+export function mockApiTeams(..._args: []): ApiTeamsResponse {
 	return {
 		"data":
 			{

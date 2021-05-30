@@ -2,9 +2,9 @@ import { call, put, StrictEffect } from 'redux-saga/effects';
 import { sagaActions } from './saga';
 import store from '../store';
 import { simActions } from '../slices/simSlice';
-import type { SchedulesState } from '../slices/schedulesSlice';
 import { BREADCRUMB_DELIMITER } from '../../consts/BREADCRUMB_DELIMITER';
 import { timeout } from '../../utils/timeoutPromise';
+import { OpponentsLookupByTeam } from '../slices/OpponentsLookupByTeam';
 
 /**
  * A data node that represents the pathway of related opponents that potentially connects the target teams.
@@ -27,15 +27,15 @@ type SearchablePathwayNode = {
  * Note: this does not actually use a tree struct with nodes but virtually constructs a viable alternative.
  * [Tree traversal]{@link https://en.wikipedia.org/wiki/Tree_traversal}
  * @param targetOpponentId The id of the opponent that we're trying to find a match with (aka team2).
- * @param allTeamSchedules Master lookup table for all the opponents a team directly played in the given year.
+ * @param allTeamOpponents Master lookup table for all the opponents a team directly played in the given year.
  * @param currentLevelPathwayNodes Nodes to search at the current level (as an array, in-order traversal is much easier!).
  * @param level The current search depth (0-based because we start with team1 alone in the first depth search).
  * @param results
  // * @param nextDepthSiblings
  */
-async function recursivelySearchForCommonOpponents(
+async function recursivelyFindCommonOpponents(
 	targetOpponentId: string,
-	allTeamSchedules: SchedulesState,
+	allTeamOpponents: OpponentsLookupByTeam,
 	currentLevelPathwayNodes: SearchablePathwayNode[],
 	level: number,
 	results: string[],
@@ -56,7 +56,7 @@ async function recursivelySearchForCommonOpponents(
 		}
 
 		if (level < 5) {
-			let nextTeamOpponents = allTeamSchedules[pathwayNode.nextTeamId];
+			let nextTeamOpponents = allTeamOpponents[pathwayNode.nextTeamId];
 
 			for (const nestedOpponentId in nextTeamOpponents) {
 				if (!pathwayNode.breadcrumbIds.includes(`${BREADCRUMB_DELIMITER}${nestedOpponentId}${BREADCRUMB_DELIMITER}`)
@@ -79,9 +79,9 @@ async function recursivelySearchForCommonOpponents(
 		// wait for timeout to break up thread blocking logic (not a perfect system, consider worker thread later)
 		await timeout();
 		// process next level of potential opponent matches
-		await recursivelySearchForCommonOpponents(
+		await recursivelyFindCommonOpponents(
 			targetOpponentId,
-			allTeamSchedules,
+			allTeamOpponents,
 			nextLevelPathwayNodes,
 			level + 1,
 			results,
@@ -112,7 +112,7 @@ export function* findCommonOpponents(): Generator<
 		const state = store.getState();
 		const { setResults } = simActions;
 		const { team1, team2 } = state.sim;
-		const allTeamSchedules = state.schedules;
+		const allTeamSchedules = state.opponents;
 		// todo - these bangs are bad!
 		const processedTeamsLookup = new Set<string>();
 		processedTeamsLookup.add(team1!.team.nickname);
@@ -121,7 +121,7 @@ export function* findCommonOpponents(): Generator<
 		const start = Date.now();
 
 		// kickoff recursive search
-		const results = yield call(recursivelySearchForCommonOpponents,
+		const results = yield call(recursivelyFindCommonOpponents,
 			team2!.team.nickname,
 			allTeamSchedules,
 			[{

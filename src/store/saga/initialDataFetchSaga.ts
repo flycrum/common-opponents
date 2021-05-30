@@ -3,7 +3,7 @@ import type { ApiGamesResponse, ApiGamesResponseKeyOfResultItem } from '../../ty
 import mql from '../../vendor/mql';
 import { MqlNode } from '../../types/mqlNode';
 import { setApiGameResults } from '../slices/apiGamesSlice';
-import { parseGamesToTeamSchedules } from './parseGamesToTeamSchedules';
+import { parseGamesToOpponentsSaga } from './parseGamesToOpponentsSaga';
 import { ApiTeamsResponse } from '../../types/apiTeams';
 import axios from 'axios';
 import { setApiTeamResults } from '../slices/apiTeamsSlice';
@@ -11,8 +11,8 @@ import store from '../store';
 import { sagaActions } from './saga';
 
 const isMock = true;
-const getMockScheduleFn = () => import('../../mock/mockSchedule').then((result) => result.default());
-const getMockTeamsFn = () => import('../../mock/mockTeams').then((result) => result.default());
+const getMockApiGamesFn = () => import('../../mock/mockApiGames').then((result) => result.mockApiGames());
+const getMockApiTeamsFn = () => import('../../mock/mockApiTeams').then((result) => result.mockApiTeams());
 
 export function* fetchAllGamesSaga(): Generator<
 	StrictEffect, // yield
@@ -21,7 +21,7 @@ export function* fetchAllGamesSaga(): Generator<
 > {
 	try {
 		let result: ApiGamesResponse = yield call(
-			isMock ? getMockScheduleFn : mql,
+			isMock ? getMockApiGamesFn : mql,
 			`https://www.sports-reference.com/cfb/years/2020-schedule.html`,
 			{
 				apiKey: process.env.REACT_APP_MICROLINK_API_KEY,
@@ -84,7 +84,7 @@ export function* fetchAllGamesSaga(): Generator<
 
 			// now that we have all raw api data, let's pre-process some of the non-changing overhead for generating results
 			// todo - would like to move this to saga flow rather than this nested call (need to test prev fails so this wouldn't run)
-			yield call(parseGamesToTeamSchedules, allGamesResult);
+			yield call(parseGamesToOpponentsSaga, allGamesResult);
 		}
 	} catch(e) {
 		// todo - handle
@@ -99,7 +99,7 @@ export function* fetchTeamsSaga(): Generator<
 	> {
 	try {
 		let result = yield call(
-			isMock ? getMockTeamsFn : axios.request,
+			isMock ? getMockApiTeamsFn : axios.request,
 			{ url: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?groups=80&limit=200' }
 		);
 		// remove unused heavy props (for the sake of persistence operation ms) and set to store
