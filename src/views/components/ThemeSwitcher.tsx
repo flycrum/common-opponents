@@ -12,7 +12,6 @@ type ColorModeSwitcherProps = Omit<IconButtonProps, 'aria-label'>
 /**
  * Simple dark/light mode theme switcher button for the app.
  * @param props
- * @constructor
  */
 export const ThemeSwitcher: React.FC<ColorModeSwitcherProps> = (props) => {
 	const { toggleColorMode } = useColorMode();
@@ -21,17 +20,14 @@ export const ThemeSwitcher: React.FC<ColorModeSwitcherProps> = (props) => {
 
 	return (
 		<IconButton
-			position={'absolute'}
-			right={2}
-			top={2}
 			size="lg"
 			fontSize="lg"
 			variant="ghost"
 			color="current"
-			marginLeft="2"
 			onClick={toggleColorMode}
 			icon={<SwitchIcon/>}
 			aria-label={`Switch to ${text} mode`}
+			style={{ margin: 0 }}
 			{...props}
 		/>
 	);
