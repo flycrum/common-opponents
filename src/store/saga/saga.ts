@@ -1,4 +1,5 @@
 import {
+	all,
 	call,
 	take,
 	takeLatest,
@@ -9,6 +10,7 @@ import {
 } from './initialDataFetchSaga';
 import { findCommonOpponents } from './findCommonOpponentsSaga';
 import { randomSelectTeamsSaga } from './randomSelectTeamsSaga';
+import { COUNT_REDUCERS_PERSISTED } from '../storeHelpers';
 
 export const sagaActions = {
 	FETCH_ALL_GAMES_SAGA: 'FETCH_SCHEDULE_SAGA',
@@ -19,8 +21,14 @@ export const sagaActions = {
 };
 
 export default function* rootSaga(): Generator<any, any, any> {
-	// wait for rehydrated action (blocking)
-	yield take(REHYDRATE);
+	// wait for ALL rehydrated actions to complete (blocking)
+	// the number of 'take' waiting yields must be exact otherwise one of two things will occur:
+	// 1. too few yields will kickoff rest of logic before all store has been rehydrated w/ possible undesired effects
+	// 2. too many yields will means the rest of the logic will never execute
+	yield all([...Array(COUNT_REDUCERS_PERSISTED + 10)].map(() =>
+		take(REHYDRATE)
+	));
+
 	// load initial data (blocking)
 	yield call(loadInitialData);
 	// listen for each action and execute fetch (non-blocking)
