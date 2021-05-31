@@ -4,7 +4,7 @@ import store from '../store';
 import { simActions } from '../slices/simSlice';
 import { BREADCRUMB_DELIMITER } from '../../consts/BREADCRUMB_DELIMITER';
 import { timeout } from '../../utils/timeoutPromise';
-import { OpponentsLookupByTeam } from '../slices/OpponentsLookupByTeam';
+import { OpponentsLookupByTeam } from '../../types/OpponentsLookupByTeam';
 
 /**
  * A data node that represents the pathway of related opponents that potentially connects the target teams.
@@ -30,6 +30,7 @@ type SearchablePathwayNode = {
  * @param allTeamOpponents Master lookup table for all the opponents a team directly played in the given year.
  * @param currentLevelPathwayNodes Nodes to search at the current level (as an array, in-order traversal is much easier!).
  * @param level The current search depth (0-based because we start with team1 alone in the first depth search).
+ * @param levelMax The max depth the recursive search will go.
  * @param results
  // * @param nextDepthSiblings
  */
@@ -38,6 +39,7 @@ async function recursivelyFindCommonOpponents(
 	allTeamOpponents: OpponentsLookupByTeam,
 	currentLevelPathwayNodes: SearchablePathwayNode[],
 	level: number,
+	levelMax: number,
 	results: string[],
 ): Promise<string[]> {
 	const nextLevelPathwayNodes: SearchablePathwayNode[] = [];
@@ -55,7 +57,7 @@ async function recursivelyFindCommonOpponents(
 			continue;
 		}
 
-		if (level < 5) {
+		if (level < levelMax) {
 			let nextTeamOpponents = allTeamOpponents[pathwayNode.nextTeamId];
 
 			for (const nestedOpponentId in nextTeamOpponents) {
@@ -84,6 +86,7 @@ async function recursivelyFindCommonOpponents(
 			allTeamOpponents,
 			nextLevelPathwayNodes,
 			level + 1,
+			levelMax,
 			results,
 		);
 	}
@@ -108,10 +111,14 @@ export function* findCommonOpponents(): Generator<
 	void, // return
 	any // accept
 > {
+	const state = store.getState();
+	const { setResults, setPendingResults, setFailedResults } = simActions;
+
+	yield put({ type: `${sagaActions.FIND_COMMON_OPPONENTS}_PENDING` });
+	yield put(setPendingResults());
+
 	try {
-		const state = store.getState();
-		const { setResults } = simActions;
-		const { team1, team2 } = state.sim;
+		const { team1, team2, levelMax } = state.sim;
 		const allTeamSchedules = state.opponents;
 		// todo - these bangs are bad!
 		const processedTeamsLookup = new Set<string>();
@@ -131,6 +138,7 @@ export function* findCommonOpponents(): Generator<
 				nextTeamId: team1!.team.nickname,
 			}],
 			0,
+			levelMax,
 			[],
 		);
 
@@ -138,7 +146,6 @@ export function* findCommonOpponents(): Generator<
 
 		yield put(setResults(results));
 	} catch(e) {
-		// todo - handle
-		yield put({ type: `${sagaActions.FIND_COMMON_OPPONENTS}_FAILED`, payload: e });
+		yield put(setFailedResults());
 	}
 }
