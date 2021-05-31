@@ -1,6 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 
+export type SimResults = {
+	/** Traversal path of opponent ids used to track paths, lookup individual points along the way. **/
+	pathway: string;
+	/** Traversal path but as an array **/
+	pathwayList: string[];
+}[];
+
 /**
  * Simulation details like teams selected, results, and other related details.
  */
@@ -10,7 +17,7 @@ export const simSlice = createSlice({
 		isLoading: false as boolean,
 		/** The max depth common opponents will recursively search **/
 		levelMax: 5,
-		results: null as string[] | null,
+		results: null as SimResults | null,
 		team1: null as ApiTeamsResponseTeamItem | null,
 		team2: null as ApiTeamsResponseTeamItem | null,
 	},
@@ -19,7 +26,7 @@ export const simSlice = createSlice({
 			state.results = null;
 			state.isLoading = true;
 		},
-		setResults: (state, action: PayloadAction<string[] | null>) => {
+		setResults: (state, action: PayloadAction<SimResults | null>) => {
 			state.results = action.payload;
 			state.isLoading = false;
 		},

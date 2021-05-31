@@ -1,8 +1,8 @@
 import { call, put, StrictEffect } from 'redux-saga/effects';
 import { sagaActions } from './saga';
 import store from '../store';
-import { simActions } from '../slices/simSlice';
-import { BREADCRUMB_DELIMITER } from '../../consts/BREADCRUMB_DELIMITER';
+import { simActions, SimResults } from '../slices/simSlice';
+import { PATHWAY_DELIMITER } from '../../consts/PATHWAY_DELIMITER';
 import { timeout } from '../../utils/timeoutPromise';
 import { OpponentsLookupByTeam } from '../../types/OpponentsLookupByTeam';
 
@@ -15,7 +15,7 @@ type SearchablePathwayNode = {
 	 * Traversal path of opponent ids used to track paths, lookup individual points along the way.
 	 * Note: we use a string here because making copies of it and searching within it for partial matches is cheap.
 	 */
-	breadcrumbIds: string;
+	pathway: string;
 	/**
 	 * The next/current/last opponent id in the pathway.
 	 */
@@ -40,8 +40,8 @@ async function recursivelyFindCommonOpponents(
 	currentLevelPathwayNodes: SearchablePathwayNode[],
 	level: number,
 	levelMax: number,
-	results: string[],
-): Promise<string[]> {
+	results: SimResults,
+): Promise<SimResults> {
 	const nextLevelPathwayNodes: SearchablePathwayNode[] = [];
 
 	// iterate over the possible opponents pathways for this level
@@ -49,7 +49,10 @@ async function recursivelyFindCommonOpponents(
 		// console.log(new Array(level * 4).join(' '), level, 'opponentId: ', oppBreadcrumb.opponentId);
 		if (pathwayNode.nextTeamId === targetOpponentId) {
 			// ! FOUND COMMON OPPONENT !
-			results.push(pathwayNode.breadcrumbIds);
+			results.push({
+				pathway: pathwayNode.pathway,
+				pathwayList: pathwayNode.pathway.split(PATHWAY_DELIMITER),
+			});
 			// skip to next iteration since we don't want to process children of already established connection
 			// this is necessary to avoid redundant results like:
 			// ex1: Alabama >> Notre Dame >> Alabama >> Notre Dame
@@ -61,14 +64,14 @@ async function recursivelyFindCommonOpponents(
 			let nextTeamOpponents = allTeamOpponents[pathwayNode.nextTeamId];
 
 			for (const nestedOpponentId in nextTeamOpponents) {
-				if (!pathwayNode.breadcrumbIds.includes(`${BREADCRUMB_DELIMITER}${nestedOpponentId}${BREADCRUMB_DELIMITER}`)
+				if (!pathwayNode.pathway.includes(`${PATHWAY_DELIMITER}${nestedOpponentId}${PATHWAY_DELIMITER}`)
 					&& nextTeamOpponents.hasOwnProperty(nestedOpponentId)
 				) {
 					// console.log(new Array(level * 4).join(' '), level, '⎣ nestedOpponentId: ', nestedOpponentId);
 					nextLevelPathwayNodes.push({
 						// append to breadcrumbs of potential common opponents
 						// add trailing delimiter to make it easier to accurately search on string without split or regex
-						breadcrumbIds: `${pathwayNode.breadcrumbIds}${nestedOpponentId}${BREADCRUMB_DELIMITER}`,
+						pathway: `${pathwayNode.pathway}${nestedOpponentId}${PATHWAY_DELIMITER}`,
 						nextTeamId: nestedOpponentId,
 					});
 				}
@@ -90,18 +93,6 @@ async function recursivelyFindCommonOpponents(
 			results,
 		);
 	}
-
-	// remove leading and trailing delimiters
-	results = results.map((resultItem) => {
-		// split on the delimiter
-		let breadcrumbsList = resultItem.split(BREADCRUMB_DELIMITER)
-		// remove leading delimiter
-		breadcrumbsList.shift();
-		// remove trailing delimiter
-		breadcrumbsList.pop();
-
-		return breadcrumbsList.join(BREADCRUMB_DELIMITER);
-	});
 
 	return results;
 }
@@ -128,13 +119,13 @@ export function* findCommonOpponents(): Generator<
 		const start = Date.now();
 
 		// kickoff recursive search
-		const results = yield call(recursivelyFindCommonOpponents,
+		let results: SimResults = yield call(recursivelyFindCommonOpponents,
 			team2!.team.nickname,
 			allTeamSchedules,
 			[{
 				// pre-populate breadcrumbs with team1
 				// include leading delimiter to more easily search for teams within string without using 'split'
-				breadcrumbIds: `${BREADCRUMB_DELIMITER}${team1!.team.nickname}${BREADCRUMB_DELIMITER}`,
+				pathway: `${PATHWAY_DELIMITER}${team1!.team.nickname}${PATHWAY_DELIMITER}`,
 				nextTeamId: team1!.team.nickname,
 			}],
 			0,
@@ -142,10 +133,26 @@ export function* findCommonOpponents(): Generator<
 			[],
 		);
 
+		// remove leading and trailing delimiters
+		results = results.map((resultItem) => {
+			// split on the delimiter
+			let pathwayList = resultItem.pathway.split(PATHWAY_DELIMITER)
+			// remove leading delimiter
+			pathwayList.shift();
+			// remove trailing delimiter
+			pathwayList.pop();
+
+			resultItem.pathwayList = pathwayList;
+			resultItem.pathway = pathwayList.join(PATHWAY_DELIMITER);
+
+			return resultItem;
+		});
+
 		console.log('results took: ', (Date.now() - start) / 1000);
 
 		yield put(setResults(results));
 	} catch(e) {
+		console.error(e);
 		yield put(setFailedResults());
 	}
 }

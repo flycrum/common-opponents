@@ -71,7 +71,7 @@ export const ResultsScreen = () => {
 										</Text>
 										<Text my={6}>
 											2020 was also a weird year with fewer games per school
-											and cross-conference play.
+											and increased focus on intra-conference play.
 										</Text>
 									</Box>
 								)

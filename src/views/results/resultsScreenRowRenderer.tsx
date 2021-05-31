@@ -1,6 +1,5 @@
 import { ListRowProps } from 'react-virtualized/dist/es/List';
 import { HStack, Image } from '@chakra-ui/react';
-import { BREADCRUMB_DELIMITER } from '../../consts/BREADCRUMB_DELIMITER';
 import React from 'react';
 import type { simSlice } from '../../store/slices/simSlice';
 import type { apiTeamsSlice } from '../../store/slices/apiTeamsSlice';
@@ -28,8 +27,8 @@ export function resultsScreenRowRenderer(
 
 	return (
 		<div key={key} style={style}>
-			<HStack key={resultItem}>
-				{resultItem.split(BREADCRUMB_DELIMITER).map((teamId) => (
+			<HStack key={resultItem.pathway}>
+				{resultItem.pathwayList.map((teamId) => (
 					<Image
 						key={teamId}
 						width={50}
