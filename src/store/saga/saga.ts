@@ -1,5 +1,4 @@
 import {
-	all,
 	call,
 	take,
 	takeLatest,
@@ -21,13 +20,17 @@ export const sagaActions = {
 };
 
 export default function* rootSaga(): Generator<any, any, any> {
-	// wait for ALL rehydrated actions to complete (blocking)
-	// the number of 'take' waiting yields must be exact otherwise one of two things will occur:
-	// 1. too few yields will kickoff rest of logic before all store has been rehydrated w/ possible undesired effects
-	// 2. too many yields will means the rest of the logic will never execute
-	yield all([...Array(COUNT_REDUCERS_PERSISTED + 10)].map(() =>
-		take(REHYDRATE)
-	));
+	/**
+	 *  Wait for ALL future rehydrated actions to complete (blocking & sequential).
+	 *  [Future Actions in redux-saga]{@link https://redux-saga.js.org/docs/advanced/FutureActions}
+	 *  The number of 'take' waiting yields must be exact otherwise one of two things will occur:
+	 *  1. too few yields will kickoff rest of logic before all store has been rehydrated w/ possible undesired effects
+	 *  2. too many yields will means the rest of the logic will never execute
+	 */
+	for (let i = 0 ; i < COUNT_REDUCERS_PERSISTED ; i++) {
+		yield take(REHYDRATE);
+	}
+
 
 	// load initial data (blocking)
 	yield call(loadInitialData);
