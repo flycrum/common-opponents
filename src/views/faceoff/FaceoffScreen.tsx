@@ -1,12 +1,12 @@
 import React from 'react';
 import {
+	Box,
 	ButtonGroup,
 	GridItem,
 	Heading,
 	IconButton,
 	SimpleGrid,
 	Text,
-	Tooltip,
 	VStack
 } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../../store/store';
@@ -95,34 +95,32 @@ export const FaceoffScreen = () => {
 					alignItems={'center'}
 					justifyContent={team1 && team2 ? 'space-between' : 'center'}
 				>
-					<Tooltip
-						label="Randomize teams"
-						openDelay={1000}
+					<Box
+						visibility={team1 && team2 ? 'visible' : 'hidden'}
+						width={'70px'}
+					/>
+					<IconButton
+						p={'4'}
+						size="lg"
+						isRound
+						colorScheme={'white'}
+						onClick={() => dispatch({ type: sagaActions.RANDOM_SELECT_TEAMS })}
+						icon={<FaDice />}
+						aria-label={'Randomize teams'}
+					/>
+					<IconButton
+						visibility={team1 && team2 ? 'visible' : 'hidden'}
+						p={'4'}
+						size="lg"
+						isRound
+						colorScheme={'yellow'}
+						aria-label="Find common opponents"
+						onClick={() => history.push(routePaths.RESULTS)}
 					>
-						<IconButton
-							p={'4'}
-							size="lg"
-							isRound
-							colorScheme={'white'}
-							onClick={() => dispatch({ type: sagaActions.RANDOM_SELECT_TEAMS })}
-							icon={<FaDice />}
-							aria-label={'Randomize teams'}
-						/>
-					</Tooltip>
-					{team1 && team2 && (
-						<IconButton
-							p={'4'}
-							size="lg"
-							isRound
-							colorScheme={'yellow'}
-							aria-label="Find common opponents"
-							onClick={() => history.push(routePaths.RESULTS)}
-						>
-							<span>
-								GO!
-							</span>
-						</IconButton>
-					)}
+						<span>
+							GO!
+						</span>
+					</IconButton>
 				</ButtonGroup>
 			</VStack>
 		</VStack>

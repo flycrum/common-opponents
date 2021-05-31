@@ -7,6 +7,7 @@ import { Provider } from 'react-redux';
 import { ColorModeScript } from '@chakra-ui/react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import * as serviceWorker from './serviceWorker';
+import theme from './theme';
 
 // Should be null because we haven't modified the history stack yet
 // console.log(`History.state before pushState: ${window.location.href}`, JSON.stringify(window.history.state));
@@ -18,7 +19,7 @@ window.history.replaceState({}, document.title, window.location.href);
 ReactDOM.render(
 	<Provider store={store}>
 		<Router>
-			<ColorModeScript />
+			<ColorModeScript initialColorMode={theme.config.initialColorMode} />
 			<App/>
 		</Router>
 	</Provider>,

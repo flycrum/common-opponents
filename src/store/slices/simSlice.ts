@@ -23,7 +23,7 @@ export const simSlice = createSlice({
 	initialState: {
 		isLoading: false as boolean,
 		/** The max depth common opponents will recursively search **/
-		levelMax: 2,
+		levelMax: 5,
 		results: null as SimResults | null,
 		team1: null as ApiTeamsResponseTeamItem | null,
 		team2: null as ApiTeamsResponseTeamItem | null,

@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import { sagaActions } from '../../store/saga/saga';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { AutoSizer, List } from 'react-virtualized';
-import { TEAMS_LIST_ROW_HEIGHT } from '../components/TeamsList';
 import { ListRowProps } from 'react-virtualized/dist/es/List';
 import {
-	Box, Heading,
+	Box,
+	Heading,
 	Spinner,
 	Text,
+	useColorMode,
 	VStack,
 } from '@chakra-ui/react';
 import { resultsScreenRowRenderer } from './resultsScreenRowRenderer';
@@ -18,15 +19,22 @@ import { ResultsScreenHeader } from './ResultsScreenHeader';
  */
 export const ResultsScreen = () => {
 	const dispatch = useAppDispatch()
-	const { results, isLoading, levelMax } = useAppSelector((state) => state.sim);
+	const {
+		isLoading,
+		levelMax,
+		results,
+		team1,
+		team2,
+	} = useAppSelector((state) => state.sim);
 	const { entities } = useAppSelector((state) => state.apiTeams.results);
+	const { colorMode } = useColorMode();
 
 	useEffect(() => {
 		dispatch({ type: sagaActions.FIND_COMMON_OPPONENTS });
 	}, [dispatch]);
 
 	function rowRenderer(props: ListRowProps) {
-		return resultsScreenRowRenderer(props, results, entities);
+		return resultsScreenRowRenderer(props, results, entities, colorMode);
 	}
 
 	return (
@@ -36,6 +44,9 @@ export const ResultsScreen = () => {
 				flexGrow={1}
 				height={0} // this may seem odd but is a flexbox height fix hack for children
 				width={'full'}
+				style={{
+					marginTop: '0',
+				}}
 			>
 				{!results?.length
 					? (
@@ -59,11 +70,26 @@ export const ResultsScreen = () => {
 										maxWidth={'480px'}
 										textAlign={'center'}
 									>
-										<Heading size={'sm'}>
+										<Heading size={'md'}>
 											No Common Opponents Found
 										</Heading>
 										<Text my={6}>
-											Hey, it happens! Some teams simply have no common opponents within
+											Looks like the
+											{ ' ' }
+											<strong>
+												{ team1?.team.displayName }
+											</strong>
+											{ ' ' }
+											and
+											{ ' ' }
+											<strong>
+												{ team2?.team.displayName }
+											</strong>
+											{ ' ' }
+											didn't play a schedule where a close relationship could be found.
+										</Text>
+										<Text my={6}>
+											Hey, it happens! Some teams simply don't have common opponents within
 											{ ' ' }
 											{ levelMax }
 											{ ' ' }
@@ -71,7 +97,7 @@ export const ResultsScreen = () => {
 										</Text>
 										<Text my={6}>
 											2020 was also a weird year with fewer games per school
-											and increased focus on intra-conference play.
+											and an increased focus on intra-conference play.
 										</Text>
 									</Box>
 								)
@@ -90,9 +116,12 @@ export const ResultsScreen = () => {
 									height={height}
 									overscanRowCount={20}
 									rowCount={results?.length ?? 0}
-									rowHeight={TEAMS_LIST_ROW_HEIGHT}
+									rowHeight={60}
 									rowRenderer={rowRenderer}
 									width={width}
+									style={{
+										padding: '20px',
+									}}
 								/>
 							)}
 						</AutoSizer>
