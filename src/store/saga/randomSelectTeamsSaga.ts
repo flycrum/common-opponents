@@ -13,21 +13,21 @@ export function selectRandomTeam (excludeTeam?: ApiTeamsResponseTeamItem) {
 	let allTeams = [...apiTeamsSelectors.selectAll(store.getState())];
 
 	// todo - remove
-	// return excludeTeam ? allTeams[22] : allTeams[2];
+	return excludeTeam ? allTeams[42] : allTeams[76]; // two teams that played each other twice
 	// return excludeTeam ? allTeams[22] : allTeams[2];
 	// return excludeTeam ? allTeams[73] : allTeams[2];
 
-	if (excludeTeam) {
-		// find index of team we want to exclude
-		const removeIndex = allTeams.indexOf(excludeTeam);
-		// clone allTeams as to not modify the original
-		allTeams = [...allTeams];
-		// remove excluded team from copy of allTeams
-		allTeams.splice(removeIndex, 1);
-	}
-
-	const randomIndex = Math.floor(Math.random() * allTeams.length);
-	return allTeams[randomIndex] ?? null;
+	// if (excludeTeam) {
+	// 	// find index of team we want to exclude
+	// 	const removeIndex = allTeams.indexOf(excludeTeam);
+	// 	// clone allTeams as to not modify the original
+	// 	allTeams = [...allTeams];
+	// 	// remove excluded team from copy of allTeams
+	// 	allTeams.splice(removeIndex, 1);
+	// }
+	//
+	// const randomIndex = Math.floor(Math.random() * allTeams.length);
+	// return allTeams[randomIndex] ?? null;
 }
 
 export function* randomSelectTeamsSaga(): Generator<

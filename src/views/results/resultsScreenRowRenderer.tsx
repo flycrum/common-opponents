@@ -1,5 +1,5 @@
 import { ListRowProps } from 'react-virtualized/dist/es/List';
-import { HStack, Image } from '@chakra-ui/react';
+import { HStack, Image, Text, VStack } from '@chakra-ui/react';
 import React from 'react';
 import type { simSlice } from '../../store/slices/simSlice';
 import type { apiTeamsSlice } from '../../store/slices/apiTeamsSlice';
@@ -28,13 +28,25 @@ export function resultsScreenRowRenderer(
 	return (
 		<div key={key} style={style}>
 			<HStack key={resultItem.pathway}>
-				{resultItem.pathwayList.map((teamId) => (
-					<Image
-						key={teamId}
-						width={50}
-						height={50}
-						src={getLogoUrl(teamId)}
-					/>
+				{resultItem.pathwayList.map((teamId, index) => (
+					<HStack key={teamId}>
+						<Image
+							key={teamId}
+							width={50}
+							height={50}
+							src={getLogoUrl(teamId)}
+						/>
+						<VStack>
+							{index < resultItem.opponentsGames.length && resultItem.opponentsGames[index].map((game) => (
+								<Text key={game.date}>
+									{/*todo - account for multiple games between teams*/}
+									{game.teamWinnerName === teamId ? game.teamWinnerPoints : game.teamLoserPoints}
+									{ ' -  '}
+									{game.teamLoserName === teamId ? game.teamWinnerPoints : game.teamLoserPoints}
+								</Text>
+							))}
+						</VStack>
+					</HStack>
 				))}
 			</HStack>
 		</div>

@@ -27,7 +27,7 @@ type SearchablePathwayNode = {
  * Note: this does not actually use a tree struct with nodes but virtually constructs a viable alternative.
  * [Tree traversal]{@link https://en.wikipedia.org/wiki/Tree_traversal}
  * @param targetOpponentId The id of the opponent that we're trying to find a match with (aka team2).
- * @param allTeamOpponents Master lookup table for all the opponents a team directly played in the given year.
+ * @param allTeamsOpponents Master lookup table for all the opponents a team directly played in the given year.
  * @param currentLevelPathwayNodes Nodes to search at the current level (as an array, in-order traversal is much easier!).
  * @param level The current search depth (0-based because we start with team1 alone in the first depth search).
  * @param levelMax The max depth the recursive search will go.
@@ -36,7 +36,7 @@ type SearchablePathwayNode = {
  */
 async function recursivelyFindCommonOpponents(
 	targetOpponentId: string,
-	allTeamOpponents: OpponentsLookupByTeam,
+	allTeamsOpponents: OpponentsLookupByTeam,
 	currentLevelPathwayNodes: SearchablePathwayNode[],
 	level: number,
 	levelMax: number,
@@ -50,6 +50,7 @@ async function recursivelyFindCommonOpponents(
 		if (pathwayNode.nextTeamId === targetOpponentId) {
 			// ! FOUND COMMON OPPONENT !
 			results.push({
+				opponentsGames: [], // populate later
 				pathway: pathwayNode.pathway,
 				pathwayList: pathwayNode.pathway.split(PATHWAY_DELIMITER),
 			});
@@ -61,7 +62,7 @@ async function recursivelyFindCommonOpponents(
 		}
 
 		if (level < levelMax) {
-			let nextTeamOpponents = allTeamOpponents[pathwayNode.nextTeamId];
+			let nextTeamOpponents = allTeamsOpponents[pathwayNode.nextTeamId];
 
 			for (const nestedOpponentId in nextTeamOpponents) {
 				if (!pathwayNode.pathway.includes(`${PATHWAY_DELIMITER}${nestedOpponentId}${PATHWAY_DELIMITER}`)
@@ -86,7 +87,7 @@ async function recursivelyFindCommonOpponents(
 		// process next level of potential opponent matches
 		await recursivelyFindCommonOpponents(
 			targetOpponentId,
-			allTeamOpponents,
+			allTeamsOpponents,
 			nextLevelPathwayNodes,
 			level + 1,
 			levelMax,
@@ -110,7 +111,7 @@ export function* findCommonOpponents(): Generator<
 
 	try {
 		const { team1, team2, levelMax } = state.sim;
-		const allTeamSchedules = state.opponents;
+		const allTeamsOpponents = state.opponents;
 		// todo - these bangs are bad!
 		const processedTeamsLookup = new Set<string>();
 		processedTeamsLookup.add(team1!.team.nickname);
@@ -121,7 +122,7 @@ export function* findCommonOpponents(): Generator<
 		// kickoff recursive search
 		let results: SimResults = yield call(recursivelyFindCommonOpponents,
 			team2!.team.nickname,
-			allTeamSchedules,
+			allTeamsOpponents,
 			[{
 				// pre-populate breadcrumbs with team1
 				// include leading delimiter to more easily search for teams within string without using 'split'
@@ -133,7 +134,7 @@ export function* findCommonOpponents(): Generator<
 			[],
 		);
 
-		// remove leading and trailing delimiters
+		// post-process and transform results
 		results = results.map((resultItem) => {
 			// split on the delimiter
 			let pathwayList = resultItem.pathway.split(PATHWAY_DELIMITER)
@@ -142,6 +143,19 @@ export function* findCommonOpponents(): Generator<
 			// remove trailing delimiter
 			pathwayList.pop();
 
+			resultItem.opponentsGames = pathwayList.reduce(
+				(games, pathTeamId, index) => {
+					// if not the last path (which is also the target team)
+					if (index < pathwayList.length - 1) {
+						const nextPathTeamId = pathwayList[index + 1];
+						// push array of match-up games between two teams
+						games.push(allTeamsOpponents[pathTeamId][nextPathTeamId]);
+					}
+
+					return games;
+				},
+				[] as typeof resultItem.opponentsGames,
+			);
 			resultItem.pathwayList = pathwayList;
 			resultItem.pathway = pathwayList.join(PATHWAY_DELIMITER);
 
