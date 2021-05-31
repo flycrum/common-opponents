@@ -5,7 +5,7 @@ import {
 } from '@chakra-ui/react';
 import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 import { TeamLogo } from '../components/TeamLogo';
-import { TEAMS_LIST_ROW_HEIGHT } from '../components/TeamsList';
+import { TEAMS_LIST_ROW_HEIGHT } from '../components/TeamsListModal';
 import type { GridItemProps } from '@chakra-ui/layout/dist/types/grid';
 
 /**

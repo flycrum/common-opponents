@@ -15,7 +15,7 @@ import {
 	useLocation,
 } from 'react-router-dom';
 import type  { LocationState } from './types/LocationState';
-import { TeamsList } from './views/components/TeamsList';
+import { TeamsListModal } from './views/components/TeamsListModal';
 import { routePaths } from './consts/routePaths';
 import { ResultsScreen } from './views/results/ResultsScreen';
 
@@ -72,7 +72,8 @@ function App() {
 					</Route>
 				</Switch>
 				{modalBackLocation && (
-					<Route path={routePaths.TEAM_SELECT_MODAL} children={<TeamsList />} />
+					<Route path={routePaths.TEAM_SELECT_MODAL} children={<TeamsListModal />} />
+				)}
 				)}
 			</ChakraProvider>
 		</PersistGate>

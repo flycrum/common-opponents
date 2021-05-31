@@ -5,6 +5,7 @@ import type { apiTeamsSlice } from '../../store/slices/apiTeamsSlice';
 import { Slice } from '@reduxjs/toolkit';
 import theme from '../../theme';
 import {
+	Box,
 	HStack,
 	Image,
 	Text,
@@ -27,6 +28,8 @@ export function resultsScreenRowRenderer(
 	const loserColor = theme.colors.blue['500'];
 	const borderWinner1 = `linear-gradient(to left, ${winnerColor} 50%, ${loserColor} 50%)`;
 	const borderWinner2 = `linear-gradient(to left, ${loserColor} 50%, ${winnerColor} 50%)`;
+	// get inverse background color
+	// const imgBg = getColor(theme, theme.components.Tooltip.baseStyle({})['--tooltip-bg'].slice('colors.'.length));
 
 	if (!resultItem) {
 		return null;
@@ -44,17 +47,22 @@ export function resultsScreenRowRenderer(
 			>
 				{resultItem.pathwayList.map((teamId, index) => (
 					<HStack key={teamId}>
-						<Image
-							key={teamId}
+						<Box
 							zIndex={'1'} // appear about border lines
 							width={50}
 							height={50}
-							src={getLogoUrl(teamId)}
-							backgroundColor={colorMode === 'light' ? theme.colors.white : theme.colors.black}
+							backgroundColor={theme.colors.white}
 							borderRadius={'50%'}
 							border={'1px'}
-							borderColor={'#8b8680'}
-						/>
+							borderColor={'gray.400'}
+						>
+							<Image
+								width={'full'}
+								height={'full'}
+								borderRadius={'50%'}
+								src={getLogoUrl(teamId)}
+							/>
+						</Box>
 						<div>
 							{/*stack matchups (usually 1 between opponents but sometimes more)*/}
 							{index < resultItem.opponentsGames.length && resultItem.opponentsGames[index].map((game) => (

@@ -16,7 +16,7 @@ import {
 	List,
 } from 'react-virtualized';
 import { ListRowProps } from 'react-virtualized/dist/es/List';
-import { TeamsListRowButton } from './TeamsListRowButton';
+import { TeamsListModalRow } from './TeamsListModalRow';
 import { useHistory, useLocation } from 'react-router-dom';
 import type { LocationState } from '../../types/LocationState';
 
@@ -26,7 +26,7 @@ export const TEAMS_LIST_ROW_HEIGHT = 50;
 /**
  * The virtualized list to display and allow for the selection of a team.
  */
-export const TeamsList = () => {
+export const TeamsListModal = () => {
 	const location = useLocation<LocationState<1 | 2>>();
 	const history = useHistory();
 	const teams = useAppSelector(apiTeamsSelectors.selectAll);
@@ -59,7 +59,7 @@ export const TeamsList = () => {
 						borderImageSlice: 1,
 					}}
 				>
-					<TeamsListRowButton
+					<TeamsListModalRow
 						onClick={() => setTeam(team)}
 						rowHeight={TEAMS_LIST_ROW_HEIGHT}
 						team={team}

@@ -25,20 +25,11 @@ export const TeamLogo = ({
 );
 
 const ImageWithMask = styled(Image)`
-	-webkit-mask-image: linear-gradient(
-		0deg,
-		rgba(0, 0, 0, 0) 0%,
-		rgba(0, 0, 0, 1) 10%,
-		rgba(0, 0, 0, 1) 100%,
-		rgba(0, 0, 0, 1) 10%,
-		rgba(0, 0, 0, 0) 1%
-	);
 	mask-image: linear-gradient(
 		0deg,
 		rgba(0, 0, 0, 0) 0%,
-		rgba(0, 0, 0, 1) 10%,
-		rgba(0, 0, 0, 1) 100%,
-		rgba(0, 0, 0, 1) 10%,
-		rgba(0, 0, 0, 0) 1%
+		rgba(0, 0, 0, 1) 5%,
+		rgba(0, 0, 0, 1) 95%,
+		rgba(0, 0, 0, 0) 100%
 	);
 `

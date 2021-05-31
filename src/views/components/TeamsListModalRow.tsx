@@ -16,7 +16,7 @@ interface Props {
  * @param rowHeight the targeted height for the row
  * @param team the team data for the row
  */
-export const TeamsListRowButton = ({
+export const TeamsListModalRow = ({
 	onClick,
 	rowHeight,
 	team,
