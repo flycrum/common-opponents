@@ -109,7 +109,7 @@ export const FaceoffScreen = () => {
 							aria-label={'Randomize teams'}
 						/>
 					</Tooltip>
-					{team1 && (
+					{team1 && team2 && (
 						<IconButton
 							p={'4'}
 							size="lg"
