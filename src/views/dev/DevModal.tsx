@@ -14,10 +14,12 @@ import {
 	Tabs,
 } from '@chakra-ui/react';
 import {
-	DevModalTabApis,
+	DevModalTabPanelApis,
 	DevModalTabApisGamesCard,
 	DevModalTabApisTeamsCard,
-} from './DevModalTabApis';
+} from './DevModalTabPanelApis';
+import { DevModalTabSimCard } from './DevModalTabSimCard';
+import { DevModalTabPanelSim } from './DevModalTabPanelSim';
 
 /**
  * The virtualized list to display and allow for the selection of a team.
@@ -57,7 +59,10 @@ export const DevModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 								Dashboard
 							</Tab>
 							<Tab onClick={() => setSelectedTab(1)}>
-								<DevModalTabApis.Tab />
+								<DevModalTabPanelApis.Tab />
+							</Tab>
+							<Tab onClick={() => setSelectedTab(2)}>
+								<DevModalTabPanelSim.Tab />
 							</Tab>
 						</TabList>
 						<TabPanels flex="1 1 auto">
@@ -68,10 +73,14 @@ export const DevModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 								>
 									<DevModalTabApisTeamsCard onClick={() => setSelectedTab(1)} />
 									<DevModalTabApisGamesCard onClick={() => setSelectedTab(1)} />
+									<DevModalTabSimCard onClick={() => setSelectedTab(2)} />
 								</SimpleGrid>
 							</TabPanel>
 							<TabPanel>
-								<DevModalTabApis />
+								<DevModalTabPanelApis />
+							</TabPanel>
+							<TabPanel>
+								<DevModalTabPanelSim />
 							</TabPanel>
 						</TabPanels>
 					</Tabs>

@@ -1,8 +1,6 @@
 import React from 'react';
 import {
 	Box,
-	Button,
-	Heading,
 	HStack,
 	Table,
 	Tbody,
@@ -12,21 +10,18 @@ import {
 	Tr,
 } from '@chakra-ui/react';
 import { useAppSelector } from '../../store/store';
-import { LoadingStage } from '../../store/slices/initialLoadSlice';
 import { SuccessBadge } from '../components/SuccessBadge';
 import { NeutralBadge } from '../components/NeutralBadge';
+import { DevModalTabCard } from './DevModalTabCard';
 
 /**
- * The APIs dev tools.
+ * The APIs panel within dev tools.
  */
-export const DevModalTabApis = () => {
+export const DevModalTabPanelApis = () => {
 	const { loadedSources } = useAppSelector((state) => state.initialData);
 
 	return (
 		<Table variant="striped">
-			{/*<TableCaption>*/}
-			{/*	Imperial to metric conversion factors*/}
-			{/*</TableCaption>*/}
 			<Thead>
 				<Tr>
 					<Th>
@@ -85,75 +80,56 @@ export const DevModalTabApis = () => {
 	);
 }
 
-DevModalTabApis.Tab = () => (
+DevModalTabPanelApis.Tab = () => (
 	<>
 		APIs
 	</>
 );
 
-export const DevModalTabCard: React.FC<{
-	onClick: () => void,
-	stage: LoadingStage
-}> = ({ onClick, stage }) => {
-	const { loadedSources } = useAppSelector((state) => state.initialData);
-
-	return (
-		<Box
-			overflow="hidden"
-			maxW="sm"
-			borderWidth="1px"
-			borderRadius="lg"
-		>
-			<Button
-				variant="ghost"
-				justifyContent={'flex-start'}
-				height="auto"
-				width="100%"
-				onClick={onClick}
-			>
-				<Box p="6">
-					<Box d="flex">
-						<Heading
-							as="u"
-							size={'sm'}
-							mb={3}
-						>
-							APIs
-							{ ' / ' }
-							{ stage }
-						</Heading>
-					</Box>
-					<HStack alignItems={'center'}>
-						<SuccessBadge>
-							{ loadedSources[stage].length }
-						</SuccessBadge>
-						<Box as="span" color="gray.500" fontSize="sm">
-							results via
-						</Box>
-						<NeutralBadge>
-							{ loadedSources[stage].source }
-						</NeutralBadge>
-					</HStack>
-				</Box>
-			</Button>
-		</Box>
-	)
-}
-
 export const DevModalTabApisGamesCard: React.FC<{onClick: () => void}> = ({ onClick }) => {
+	const { loadedSources } = useAppSelector((state) => state.initialData);
+	const stage = 'apiGames';
+
 	return (
 		<DevModalTabCard
+			heading={`APIs / ${stage}`}
 			onClick={onClick}
-			stage={'apiGames'}
-		/>
-	)
+		>
+			<HStack alignItems={'center'}>
+				<SuccessBadge>
+					{ loadedSources[stage].length }
+				</SuccessBadge>
+				<Box as="span" color="gray.500" fontSize="sm">
+					results via
+				</Box>
+				<NeutralBadge>
+					{ loadedSources[stage].source }
+				</NeutralBadge>
+			</HStack>
+		</DevModalTabCard>
+	);
 }
 
 export const DevModalTabApisTeamsCard: React.FC<{onClick: () => void}> = ({ onClick }) => {
+	const { loadedSources } = useAppSelector((state) => state.initialData);
+	const stage = 'apiTeams';
+
 	return (
 		<DevModalTabCard
+			heading={`APIs / ${stage}`}
 			onClick={onClick}
-			stage={'apiTeams'}
-		/>
-	)
+		>
+			<HStack alignItems={'center'}>
+				<SuccessBadge>
+					{ loadedSources[stage].length }
+				</SuccessBadge>
+				<Box as="span" color="gray.500" fontSize="sm">
+					results via
+				</Box>
+				<NeutralBadge>
+					{ loadedSources[stage].source }
+				</NeutralBadge>
+			</HStack>
+		</DevModalTabCard>
+	);
 }
