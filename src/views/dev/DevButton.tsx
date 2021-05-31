@@ -17,7 +17,7 @@ export const DevButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
 			color="current"
 			onClick={onClick}
 			icon={<FaDev />}
-			aria-label={`Show dev view`}
+			aria-label={`Show dev modal`}
 			style={{ margin: 0 }}
 		/>
 	);

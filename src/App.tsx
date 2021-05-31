@@ -22,6 +22,7 @@ import { ResultsScreen } from './views/results/ResultsScreen';
 import { DevButton } from './views/dev/DevButton';
 import { DevModal } from './views/dev/DevModal';
 import { useBoolean } from 'react-use';
+import { isDevEnv } from './utils/isDevEnv';
 
 function App() {
 	const location = useLocation<LocationState>();
@@ -43,7 +44,9 @@ function App() {
 					variant="outline"
 					spacing="6"
 				>
-					<DevButton onClick={showDevModal} />
+					{isDevEnv() && (
+						<DevButton onClick={showDevModal} />
+					)}
 					<ThemeSwitcher justifySelf="flex-end"/>
 				</ButtonGroup>
 				<Switch location={modalBackLocation || location}>
