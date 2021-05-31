@@ -27,7 +27,7 @@ import { sagaActions } from '../../store/saga/saga';
 export const FaceoffScreen = () => {
 	const history = useHistory();
 	const location = useLocation();
-	const { team1, team2 } = useAppSelector((state) => state.sim);
+	const { levelMax, team1, team2 } = useAppSelector((state) => state.sim);
 	const dispatch = useAppDispatch();
 
 	function onClickShowTeamsList (teamOption: 1 | 2) {
@@ -48,26 +48,30 @@ export const FaceoffScreen = () => {
 			minH={'100vh'}
 			justifyContent={'center'}
 		>
-			<VStack spacing={8}>
-				<Heading as="h3" size="lg">
+			<VStack spacing={10}>
+				<Heading
+					as="h1"
+					size="lg"
+				>
 					Common Opponents
 				</Heading>
 				<Text>
-					{/* todo: 2 degrees? */}
-					Select teams to find their common opponents...within 2 degrees of
-					separation.
+					Select teams to find their common opponents...within
+					{ ' ' }
+					{ levelMax }
+					{ ' ' }
+					degrees of separation.
 				</Text>
 				<SimpleGrid
 					width={'full'}
 					columns={5}
+					pt={4}
 				>
 					<FaceoffScreenTeam
 						colSpan={2}
-						// onClick={() => setSelectedTeam(1)}
 						onClick={() => onClickShowTeamsList(1)}
 						team={team1}
 					/>
-					{/*<GridItem colSpan={{base: 1, sm: 1}}>*/}
 					<GridItem
 						colSpan={1}
 						display={'flex'}

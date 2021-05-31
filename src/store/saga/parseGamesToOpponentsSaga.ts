@@ -1,21 +1,23 @@
 import { put, StrictEffect } from 'redux-saga/effects';
-import type { ApiGamesResponse, ApiGamesResponseEventResults } from '../../types/apiGames';
+import type { ApiGamesResponse } from '../../types/apiGames';
 import { sagaActions } from './saga';
 import store from '../store';
-import { setTeamSchedules } from '../slices/opponentsSlice';
+import { setTeamOpponents } from '../slices/opponentsSlice';
 import type { OpponentsLookupByTeam } from '../../types/OpponentsLookupByTeam';
 
 /**
  * Parsed and restructure all games raw data as 'by Team' schedule lookup tables.
  */
-export function* parseGamesToOpponentsSaga(allGamesResult: ApiGamesResponseEventResults): Generator<
+export function* parseGamesToOpponentsSaga(): Generator<
 	StrictEffect, // yield
 	void, // return
 	ApiGamesResponse // accept
 > {
 	try {
 		const { results: teamsAdapter } = store.getState().apiTeams;
-		const transformedResult = allGamesResult.reduce(
+		const { results: apiGames } = store.getState().apiGames;
+
+		const transformedResult = apiGames.reduce(
 			(finalResult, scheduleItem) => {
 				const schoolGamesByOppId = finalResult;
 				const teamWinnerName = scheduleItem.teamWinnerName ?? '';
@@ -63,13 +65,13 @@ export function* parseGamesToOpponentsSaga(allGamesResult: ApiGamesResponseEvent
 			} as OpponentsLookupByTeam,
 		)
 
-		teamsAdapter.ids.forEach((nickname) => {
-			if (!transformedResult[nickname]) {
-				console.log('not found: ', nickname);
-			}
-		});
+		// teamsAdapter.ids.forEach((nickname) => {
+		// 	if (!transformedResult[nickname]) {
+		// 		console.log('not found: ', nickname);
+		// 	}
+		// });
 
-		yield put(setTeamSchedules(transformedResult));
+		yield put(setTeamOpponents(transformedResult));
 	} catch(e) {
 		// todo - handle
 		yield put({ type: `${sagaActions.PARSE_GAMES_TO_TEAM_SCHEDULES}_FAILED`, payload: e });

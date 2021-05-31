@@ -1,15 +1,20 @@
-import { call, put, StrictEffect } from 'redux-saga/effects';
-import type { ApiGamesResponse, ApiGamesResponseKeyOfResultItem } from '../../types/apiGames';
+import {
+	call,
+	put,
+	StrictEffect,
+} from 'redux-saga/effects';
 import mql from '../../vendor/mql';
-import { MqlNode } from '../../types/mqlNode';
+import type { MqlNode } from '../../types/mqlNode';
+import type { ApiGamesResponse, ApiGamesResponseKeyOfResultItem } from '../../types/apiGames';
+import type { ApiTeamsResponse } from '../../types/apiTeams';
 import { setApiGameResults } from '../slices/apiGamesSlice';
-import { parseGamesToOpponentsSaga } from './parseGamesToOpponentsSaga';
-import { ApiTeamsResponse } from '../../types/apiTeams';
-import axios from 'axios';
 import { setApiTeamResults } from '../slices/apiTeamsSlice';
+import axios from 'axios';
 import store from '../store';
 import { sagaActions } from './saga';
 import { convertToTeamEntityNickname } from '../../utils/convertToTeamEntityNickname';
+import { LoadedSource, setLoadedSource, setLoadingStage } from '../slices/initialLoadSlice';
+import { parseGamesToOpponentsSaga } from './parseGamesToOpponentsSaga';
 
 const isMock = true;
 const getMockApiGamesFn = () => import('../../mock/mockApiGames').then((result) => result.mockApiGames());
@@ -17,7 +22,7 @@ const getMockApiTeamsFn = () => import('../../mock/mockApiTeams').then((result) 
 
 export function* fetchAllGamesSaga(): Generator<
 	StrictEffect, // yield
-	void, // return
+	{ hasError: boolean, length: number, source: LoadedSource['source'] }, // return
 	ApiGamesResponse // accept
 > {
 	try {
@@ -110,19 +115,27 @@ export function* fetchAllGamesSaga(): Generator<
 
 			yield put(setApiGameResults(transformedResult));
 
-			// now that we have all raw api data, let's pre-process some of the non-changing overhead for generating results
-			// todo - would like to move this to saga flow rather than this nested call (need to test prev fails so this wouldn't run)
-			yield call(parseGamesToOpponentsSaga, transformedResult);
+			return {
+				hasError: false,
+				length: transformedResult?.length,
+				source: isMock ? 'mock' : 'api',
+			};
 		}
 	} catch(e) {
 		// todo - handle
 		yield put({ type: `${sagaActions.FETCH_ALL_GAMES_SAGA}_FAILED`, payload: e });
+
+		return {
+			hasError: true,
+			length: 0,
+			source: isMock ? 'mock' : 'api',
+		};
 	}
 }
 
 export function* fetchTeamsSaga(): Generator<
 	StrictEffect, // yield
-	{ hasError: boolean }, // return
+	{ hasError: boolean, length: number, source: LoadedSource['source'] }, // return
 	ApiTeamsResponse // accept
 	> {
 	try {
@@ -131,35 +144,95 @@ export function* fetchTeamsSaga(): Generator<
 			{ url: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?groups=80&limit=200' }
 		);
 		// remove unused heavy props (for the sake of persistence operation ms) and set to store
-		yield put(setApiTeamResults(result.data?.sports?.[0].leagues?.[0].teams.map((team) => {
+		const transformedResult = result.data?.sports?.[0].leagues?.[0].teams.map((team) => {
 			// @REMOVE ON LOAD
 			team.team.links = undefined;
 			// @REMOVE ON LOAD
 			team.team.record = undefined;
 			return team;
-		})));
-		return { hasError: false };
+		});
+
+		yield put(setApiTeamResults(transformedResult));
+
+		return {
+			hasError: false,
+			length: transformedResult?.length,
+			source: isMock ? 'mock' : 'api',
+		};
 	} catch(e) {
 		// todo - handle
 		yield put({ type: `${sagaActions.FETCH_TEAMS_SAGA}_FAILED`, payload: e });
-		return { hasError: true };
+
+		return {
+			hasError: true,
+			length: 0,
+			source: isMock ? 'mock' : 'api',
+		};
 	}
 }
 
 export function* loadInitialData(): Generator<any, any, any> {
 	let hasError = false;
 
+	yield put(setLoadingStage('apiTeams'));
+
+	const teamResultsLength = store.getState().apiTeams.results?.ids.length;
+
 	// if no schedule data resulted from rehydrating
-	if (!store.getState().apiTeams.results?.ids.length) {
+	if (!teamResultsLength) {
 		// wait for fetch
-		const result: { hasError: boolean } = yield call(fetchTeamsSaga);
+		const result: {
+			hasError: boolean,
+			source: LoadedSource['source'],
+			length: number,
+		} = yield call(fetchTeamsSaga);
+		// todo: there must be a much better way to do this with redux-saga and generators
 		hasError = result.hasError;
+
+		// set source of data
+		yield put(setLoadedSource({
+			source: result.source,
+			length: result.length,
+		}));
+	}
+	else {
+		// set source of data as persisted cache
+		yield put(setLoadedSource({
+			source: 'cache',
+			length: teamResultsLength,
+		}));
 	}
 
-	// if no schedule data resulted from rehydrating and no errors encountered so far
-	// todo - check for better measurement of this (perhaps via `isLoaded` state)
-	if (!store.getState().apiGames.results?.length && !hasError) {
+	yield put(setLoadingStage('apiGames'));
+
+	const gameResultsLength = (store.getState().apiGames.results ?? []).length;
+
+	// if no games data resulted from rehydrating and no errors encountered so far
+	if (!gameResultsLength && !hasError) {
 		// wait for fetch
-		yield call(fetchAllGamesSaga);
+		const result: {
+			hasError: boolean,
+			source: LoadedSource['source'],
+			length: number,
+		} = yield call(fetchAllGamesSaga);
+
+		// set source of data
+		// set source of data
+		yield put(setLoadedSource({
+			source: result.source,
+			length: result.length,
+		}));
 	}
+	else {
+		// set source of data as persisted cache
+		yield put(setLoadedSource({
+			source: 'cache',
+			length: gameResultsLength,
+		}));
+	}
+
+	yield put(setLoadingStage(null));
+
+	// now that we have all raw api data, let's pre-process some of the non-changing overhead for generating results
+	yield call(parseGamesToOpponentsSaga);
 }

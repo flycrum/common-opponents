@@ -46,9 +46,10 @@ async function recursivelyFindCommonOpponents(
 
 	// iterate over the possible opponents pathways for this level
 	for (const pathwayNode of currentLevelPathwayNodes) {
-		// console.log(new Array(level * 4).join(' '), level, 'opponentId: ', oppBreadcrumb.opponentId);
+		// console.log(new Array(level * 4).join(' '), level, 'opponentId: ', pathwayNode.nextTeamId);
 		if (pathwayNode.nextTeamId === targetOpponentId) {
 			// ! FOUND COMMON OPPONENT !
+			// console.log(' ! FOUND COMMON OPPONENT !')
 			results.push({
 				opponentsGames: [], // populate later
 				pathway: pathwayNode.pathway,

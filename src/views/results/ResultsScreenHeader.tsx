@@ -27,7 +27,7 @@ export const ResultsScreenHeader = () => {
 				variant={'ghost'}
 				onClick={() => history.goBack()}
 			/>
-			<Heading>
+			<Heading as="h1">
 				Results
 			</Heading>
 			<Box width={'48px'} />

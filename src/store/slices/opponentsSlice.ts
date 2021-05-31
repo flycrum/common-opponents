@@ -8,11 +8,10 @@ export const opponentsSlice = createSlice({
 	name: 'opponents',
 	initialState: {} as OpponentsLookupByTeam,
 	reducers: {
-		// setApiGameResults: (state, action: PayloadAction<ScheduleApiResponse['data']['schedule']>) => {
-		setTeamSchedules: (state, action: PayloadAction<OpponentsLookupByTeam>) => {
+		setTeamOpponents: (state, action: PayloadAction<OpponentsLookupByTeam>) => {
 			return action.payload;
 		},
 	},
 });
 
-export const { setTeamSchedules } = opponentsSlice.actions;
+export const { setTeamOpponents } = opponentsSlice.actions;

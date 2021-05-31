@@ -14,7 +14,7 @@ export const apiGamesSlice = createSlice({
 	reducers: {
 		setApiGameResults: (state, action: PayloadAction<ApiGamesResponseEventResults>) => {
 			state.results = action.payload;
-		}
+		},
 	},
 });
 
