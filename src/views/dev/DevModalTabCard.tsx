@@ -2,7 +2,7 @@ import React from 'react';
 import {
 	Box,
 	Button,
-	Heading,
+	Heading, VStack,
 } from '@chakra-ui/react';
 
 export const DevModalTabCard: React.FC<{
@@ -30,11 +30,10 @@ export const DevModalTabCard: React.FC<{
 				textAlign={'left'}
 				onClick={onClick}
 			>
-				<Box
-					display={'flex'}
-					flexDirection={'column'}
+				<VStack
 					height={'full'}
 					width={'full'}
+					alignItems={'flex-start'}
 				>
 					<Heading
 						as="u"
@@ -45,7 +44,7 @@ export const DevModalTabCard: React.FC<{
 						{ heading }
 					</Heading>
 					{ children }
-				</Box>
+				</VStack>
 			</Button>
 		</Box>
 	);

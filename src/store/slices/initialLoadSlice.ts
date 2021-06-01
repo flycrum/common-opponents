@@ -8,7 +8,8 @@ export type LoadedSource = {
 export type LoadingStage = 'apiGames' | 'apiTeams';
 
 /**
- * Initial load progress state.
+ * Initial load progress state..
+ * @persisted
  */
 export const initialLoadSlice = createSlice({
 	name: 'initialLoad',

@@ -13,13 +13,11 @@ import {
 	TabPanels,
 	Tabs,
 } from '@chakra-ui/react';
-import {
-	DevModalTabPanelApis,
-	DevModalTabApisGamesCard,
-	DevModalTabApisTeamsCard,
-} from './DevModalTabPanelApis';
+import { DevModalTabPanelApis } from './DevModalTabPanelApis';
 import { DevModalTabSimCard } from './DevModalTabSimCard';
 import { DevModalTabPanelSim } from './DevModalTabPanelSim';
+import { DevModalTabApisTeamsCard } from './DevModalTabPanelApisTeamsCard';
+import { DevModalTabApisGamesCard } from './DevModalTabPanelApisGamesCard';
 
 /**
  * The virtualized list to display and allow for the selection of a team.

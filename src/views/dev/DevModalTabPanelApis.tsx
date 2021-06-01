@@ -1,7 +1,7 @@
 import React from 'react';
 import {
-	Box,
-	HStack,
+	Button,
+	Checkbox,
 	Table,
 	Tbody,
 	Td,
@@ -9,16 +9,41 @@ import {
 	Thead,
 	Tr,
 } from '@chakra-ui/react';
-import { useAppSelector } from '../../store/store';
+import store, { useAppDispatch, useAppSelector } from '../../store/store';
 import { PositiveBadge } from '../components/PositiveBadge';
 import { NeutralBadge } from '../components/NeutralBadge';
-import { DevModalTabCard } from './DevModalTabCard';
+import {
+	getOptionsUseMockApiGames,
+	getOptionsUseMockApiTeams,
+	getPersistKeyByStateName
+} from '../../store/storeHelpers';
+import { setOptionsUseMockApiGames, setOptionsUseMockApiTeams } from '../../store/slices/optionsSlice';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import { VscDebugRestart } from 'react-icons/vsc';
 
 /**
  * The APIs panel within dev tools.
+ * @todo this file needs to be refactored, cleaned up, split out, etc.
  */
 export const DevModalTabPanelApis = () => {
+	const [hasCache, updateHasCache] = React.useState({
+		apiGames: hasCacheInLocalStorage('apiGames'),
+		apiTeams: hasCacheInLocalStorage('apiTeams'),
+	});
 	const { loadedSources } = useAppSelector((state) => state.initialData);
+	const dispatch = useAppDispatch();
+
+	function clearCache (stateName: string) {
+		window.localStorage.removeItem(getPersistKeyByStateName(stateName));
+		updateHasCache({
+			apiGames: hasCacheInLocalStorage('apiGames'),
+			apiTeams: hasCacheInLocalStorage('apiTeams'),
+		});
+	}
+
+	function hasCacheInLocalStorage (stateName: string) {
+		return window.localStorage.hasOwnProperty(getPersistKeyByStateName(stateName));
+	}
 
 	return (
 		<Table
@@ -34,10 +59,19 @@ export const DevModalTabPanelApis = () => {
 						Provider
 					</Th>
 					<Th>
+						Results
+					</Th>
+					<Th>
 						Source
 					</Th>
 					<Th>
-						No. Results
+						useMock
+					</Th>
+					<Th>
+						Cached
+					</Th>
+					<Th>
+
 					</Th>
 				</Tr>
 			</Thead>
@@ -50,14 +84,43 @@ export const DevModalTabPanelApis = () => {
 						espn.com
 					</Td>
 					<Td>
+						<PositiveBadge>
+							{ loadedSources['apiTeams'].length }
+						</PositiveBadge>
+					</Td>
+					<Td>
 						<NeutralBadge>
 							{ loadedSources['apiTeams'].source }
 						</NeutralBadge>
 					</Td>
 					<Td>
-						<PositiveBadge>
-							{ loadedSources['apiTeams'].length }
-						</PositiveBadge>
+						<Checkbox
+							defaultIsChecked={!!getOptionsUseMockApiTeams(store.getState())}
+							onChange={(e) => dispatch(setOptionsUseMockApiTeams(e.target.checked))}
+						/>
+					</Td>
+					<Td>
+						<Checkbox
+							isChecked={hasCache.apiTeams}
+							isDisabled
+						/>
+					</Td>
+					<Td>
+						<Button
+							size={'xs'}
+							variant="outline"
+							leftIcon={hasCache.apiTeams ? <FaRegTrashAlt /> : <VscDebugRestart />}
+							colorScheme="red"
+							onClick={() => hasCache.apiTeams
+								? clearCache('apiTeams')
+								: window.location.reload()
+							}
+						>
+							{hasCache.apiTeams
+								? 'Clear'
+								: 'Restart'
+							}
+						</Button>
 					</Td>
 				</Tr>
 				<Tr>
@@ -68,14 +131,38 @@ export const DevModalTabPanelApis = () => {
 						sports-reference.com
 					</Td>
 					<Td>
+						<PositiveBadge>
+							{ loadedSources['apiGames'].length }
+						</PositiveBadge>
+					</Td>
+					<Td>
 						<NeutralBadge>
 							{ loadedSources['apiGames'].source }
 						</NeutralBadge>
 					</Td>
 					<Td>
-						<PositiveBadge>
-							{ loadedSources['apiGames'].length }
-						</PositiveBadge>
+						<Checkbox
+							defaultIsChecked={!!getOptionsUseMockApiGames(store.getState())}
+							onChange={(e) => dispatch(setOptionsUseMockApiGames(e.target.checked))}
+						/>
+					</Td>
+					<Td>
+						<Checkbox
+							isChecked={hasCache.apiGames}
+							isDisabled
+						/>
+					</Td>
+					<Td>
+						<Button
+							size={'xs'}
+							variant="outline"
+							leftIcon={<FaRegTrashAlt />}
+							colorScheme="red"
+							// todo - move to saga?
+							onClick={() => clearCache('apiGames')}
+						>
+							Clear
+						</Button>
 					</Td>
 				</Tr>
 			</Tbody>
@@ -88,51 +175,3 @@ DevModalTabPanelApis.Tab = () => (
 		APIs
 	</>
 );
-
-export const DevModalTabApisGamesCard: React.FC<{onClick: () => void}> = ({ onClick }) => {
-	const { loadedSources } = useAppSelector((state) => state.initialData);
-	const stage = 'apiGames';
-
-	return (
-		<DevModalTabCard
-			heading={`APIs / ${stage}`}
-			onClick={onClick}
-		>
-			<HStack alignItems={'center'}>
-				<PositiveBadge>
-					{ loadedSources[stage].length }
-				</PositiveBadge>
-				<Box as="span" color="gray.500" fontSize="sm">
-					results via
-				</Box>
-				<NeutralBadge>
-					{ loadedSources[stage].source }
-				</NeutralBadge>
-			</HStack>
-		</DevModalTabCard>
-	);
-}
-
-export const DevModalTabApisTeamsCard: React.FC<{onClick: () => void}> = ({ onClick }) => {
-	const { loadedSources } = useAppSelector((state) => state.initialData);
-	const stage = 'apiTeams';
-
-	return (
-		<DevModalTabCard
-			heading={`APIs / ${stage}`}
-			onClick={onClick}
-		>
-			<HStack alignItems={'center'}>
-				<PositiveBadge>
-					{ loadedSources[stage].length }
-				</PositiveBadge>
-				<Box as="span" color="gray.500" fontSize="sm">
-					results via
-				</Box>
-				<NeutralBadge>
-					{ loadedSources[stage].source }
-				</NeutralBadge>
-			</HStack>
-		</DevModalTabCard>
-	);
-}

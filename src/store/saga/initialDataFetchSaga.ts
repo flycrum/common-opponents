@@ -15,9 +15,8 @@ import { sagaActions } from './saga';
 import { convertToTeamEntityNickname } from '../../utils/convertToTeamEntityNickname';
 import { LoadedSource, setLoadedSource, setLoadingStage } from '../slices/initialLoadSlice';
 import { parseGamesToOpponentsSaga } from './parseGamesToOpponentsSaga';
-import { delay } from '../../utils/timeoutPromise';
+import { getOptionsUseMockApiGames, getOptionsUseMockApiTeams } from '../storeHelpers';
 
-const isMock = true;
 const getMockApiGamesFn = () => import('../../mock/mockApiGames').then((result) => result.mockApiGames());
 const getMockApiTeamsFn = () => import('../../mock/mockApiTeams').then((result) => result.mockApiTeams());
 
@@ -26,9 +25,11 @@ export function* fetchAllGamesSaga(): Generator<
 	{ hasError: boolean, length: number, source: LoadedSource['source'] }, // return
 	ApiGamesResponse // accept
 > {
+	const useMock = getOptionsUseMockApiGames(store.getState());
+
 	try {
 		const result: ApiGamesResponse = yield call(
-			isMock ? getMockApiGamesFn : mql,
+			useMock ? getMockApiGamesFn : mql,
 			`https://www.sports-reference.com/cfb/years/2020-schedule.html`,
 			{
 				apiKey: process.env.REACT_APP_MICROLINK_API_KEY,
@@ -119,7 +120,7 @@ export function* fetchAllGamesSaga(): Generator<
 			return {
 				hasError: false,
 				length: transformedResult?.length,
-				source: isMock ? 'mock' : 'api',
+				source: useMock ? 'mock' : 'api',
 			};
 		}
 	} catch(e) {
@@ -129,7 +130,7 @@ export function* fetchAllGamesSaga(): Generator<
 		return {
 			hasError: true,
 			length: 0,
-			source: isMock ? 'mock' : 'api',
+			source: useMock ? 'mock' : 'api',
 		};
 	}
 }
@@ -138,10 +139,12 @@ export function* fetchTeamsSaga(): Generator<
 	StrictEffect, // yield
 	{ hasError: boolean, length: number, source: LoadedSource['source'] }, // return
 	ApiTeamsResponse // accept
-	> {
+> {
+	const useMock = getOptionsUseMockApiTeams(store.getState());
+
 	try {
-		let result = yield call(
-			isMock ? getMockApiTeamsFn : axios.request,
+		const result = yield call(
+			useMock ? getMockApiTeamsFn : axios.request,
 			{ url: 'http://site.api.espn.com/apis/site/v2/sports/football/college-football/teams?groups=80&limit=200' }
 		);
 		// remove unused heavy props (for the sake of persistence operation ms) and set to store
@@ -158,7 +161,7 @@ export function* fetchTeamsSaga(): Generator<
 		return {
 			hasError: false,
 			length: transformedResult?.length,
-			source: isMock ? 'mock' : 'api',
+			source: useMock ? 'mock' : 'api',
 		};
 	} catch(e) {
 		// todo - handle
@@ -167,7 +170,7 @@ export function* fetchTeamsSaga(): Generator<
 		return {
 			hasError: true,
 			length: 0,
-			source: isMock ? 'mock' : 'api',
+			source: useMock ? 'mock' : 'api',
 		};
 	}
 }

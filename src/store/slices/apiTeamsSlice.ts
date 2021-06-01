@@ -7,7 +7,8 @@ import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 import type { AppState } from '../store';
 
 /**
- * Original team list data that can later be joined with games to further analyze.
+ * Original team list data that can later be joined with games to further analyze..
+ * @persisted
  * Stored as entity which allows for easy CRUD operations in addition to ordered-map like capabilities.
  * This makes lookups much easier while still easily allowing an ordered ui list with little additional work.
  * Keep as separate persisted store since it can be crazy large.
@@ -26,12 +27,13 @@ const teamsEntityAdapter = createEntityAdapter<ApiTeamsResponseTeamItem>({
 export const apiTeamsSlice = createSlice({
 	name: 'apiTeams',
 	initialState: {
+		/** API call results **/
 		results: teamsEntityAdapter.getInitialState(),
 	},
 	reducers: {
 		setApiTeamResults: (state, action: PayloadAction<ApiTeamsResponseTeamItem[] | null>) => {
 			teamsEntityAdapter.setAll(state.results, action.payload ?? []);
-		}
+		},
 	},
 });
 
@@ -40,4 +42,6 @@ export const apiTeamsSlice = createSlice({
  */
 export const apiTeamsSelectors = teamsEntityAdapter.getSelectors<AppState>(state => state.apiTeams.results);
 
-export const { setApiTeamResults } = apiTeamsSlice.actions;
+export const {
+	setApiTeamResults,
+} = apiTeamsSlice.actions;

@@ -69,7 +69,7 @@ export const DevModalTabPanelSim = () => {
 										Run Duration
 									</Th>
 									<Th isNumeric>
-										No. Results
+										Results
 									</Th>
 									<Th>
 										Matchup

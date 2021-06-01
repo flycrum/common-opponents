@@ -3,12 +3,14 @@ import type { ApiGamesResponseEventResults } from '../../types/apiGames';
 
 /**
  * Original game events data that can later be joined with teams to further analyze.
+ * @persisted
  * Keep as separate persisted store since it can be crazy large.
  * As easier to work with original persisted data and reconstruct if this stays pure.
  */
 export const apiGamesSlice = createSlice({
 	name: 'apiGames',
 	initialState: {
+		/** API call results **/
 		results: [] as ApiGamesResponseEventResults,
 	},
 	reducers: {
@@ -18,4 +20,6 @@ export const apiGamesSlice = createSlice({
 	},
 });
 
-export const { setApiGameResults } = apiGamesSlice.actions;
+export const {
+	setApiGameResults,
+} = apiGamesSlice.actions;

@@ -13,12 +13,14 @@ import { simSlice } from './slices/simSlice';
 import { opponentsSlice } from './slices/opponentsSlice';
 import { initialLoadSlice } from './slices/initialLoadSlice';
 import { simHistorySlice } from './slices/simHistorySlice';
+import { optionsSlice } from './slices/optionsSlice';
 
 const store = configureStore({
 	reducer: combineReducers({
 		...configurePersist({
 			apiTeams: apiTeamsSlice.reducer,
 			apiGames: apiGamesSlice.reducer,
+			options: optionsSlice.reducer,
 			simHistory: simHistorySlice.reducer,
 		}),
 		initialData: initialLoadSlice.reducer,
