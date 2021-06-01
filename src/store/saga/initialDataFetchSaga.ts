@@ -15,6 +15,7 @@ import { sagaActions } from './saga';
 import { convertToTeamEntityNickname } from '../../utils/convertToTeamEntityNickname';
 import { LoadedSource, setLoadedSource, setLoadingStage } from '../slices/initialLoadSlice';
 import { parseGamesToOpponentsSaga } from './parseGamesToOpponentsSaga';
+import { delay } from '../../utils/timeoutPromise';
 
 const isMock = true;
 const getMockApiGamesFn = () => import('../../mock/mockApiGames').then((result) => result.mockApiGames());
@@ -175,6 +176,7 @@ export function* loadInitialData(): Generator<any, any, any> {
 	let hasError = false;
 
 	yield put(setLoadingStage('apiTeams'));
+	// yield delay(2000);
 
 	const teamResultsLength = store.getState().apiTeams.results?.ids.length;
 
@@ -204,6 +206,7 @@ export function* loadInitialData(): Generator<any, any, any> {
 	}
 
 	yield put(setLoadingStage('apiGames'));
+	// yield delay(2000);
 
 	const gameResultsLength = (store.getState().apiGames.results ?? []).length;
 

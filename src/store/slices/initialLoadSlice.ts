@@ -15,7 +15,7 @@ export const initialLoadSlice = createSlice({
 	initialState: {
 		hasError: false as boolean,
 		isDone: false as boolean,
-		isLoading: false as boolean,
+		isLoading: true as boolean,
 		loadedSources: {
 			apiGames: {
 				length: null,

@@ -4,9 +4,7 @@ import {
 	takeLatest,
 } from 'redux-saga/effects';
 import { REHYDRATE } from 'redux-persist';
-import {
-	loadInitialData,
-} from './initialDataFetchSaga';
+import { loadInitialData } from './initialDataFetchSaga';
 import { findCommonOpponents } from './findCommonOpponentsSaga';
 import { randomSelectTeamsSaga } from './randomSelectTeamsSaga';
 import { COUNT_REDUCERS_PERSISTED } from '../storeHelpers';
@@ -23,6 +21,7 @@ export default function* rootSaga(): Generator<any, any, any> {
 	/**
 	 *  Wait for ALL future rehydrated actions to complete (blocking & sequential).
 	 *  [Future Actions in redux-saga]{@link https://redux-saga.js.org/docs/advanced/FutureActions}
+	 *  Note: this must execute !FIRST! in this `rootSaga` as any prior yields can mess up the 'yield' take calls here.
 	 *  The number of 'take' waiting yields must be exact otherwise one of two things will occur:
 	 *  1. too few yields will kickoff rest of logic before all store has been rehydrated w/ possible undesired effects
 	 *  2. too many yields will means the rest of the logic will never execute
@@ -30,7 +29,6 @@ export default function* rootSaga(): Generator<any, any, any> {
 	for (let i = 0 ; i < COUNT_REDUCERS_PERSISTED ; i++) {
 		yield take(REHYDRATE);
 	}
-
 
 	// load initial data (blocking)
 	yield call(loadInitialData);
