@@ -27,6 +27,7 @@ export const DevModalTabCard: React.FC<{
 				alignItems={'flex-start'}
 				height={'full'}
 				width={'full'}
+				textAlign={'left'}
 				onClick={onClick}
 			>
 				<Box

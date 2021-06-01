@@ -34,6 +34,7 @@ export const DevModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 			isOpen={true}
 			isCentered
 			motionPreset={'none'}
+			scrollBehavior={'inside'}
 		>
 			<ModalOverlay />
 			<ModalContent my={0}>
@@ -41,12 +42,16 @@ export const DevModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 					position={'absolute'}
 					zIndex={1} // show above rest of modal content
 				/>
-				<ModalHeader paddingStart={4}>
+				<ModalHeader
+					paddingStart={4}
+					fontSize={'2xl'}
+				>
 					Dev Tools
 				</ModalHeader>
 				<ModalBody
 					display={'flex'}
 					p={0}
+					overflow={'hidden'}
 				>
 					<Tabs
 						display={'flex'}
@@ -65,8 +70,8 @@ export const DevModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 								<DevModalTabPanelSim.Tab />
 							</Tab>
 						</TabList>
-						<TabPanels flex="1 1 auto">
-							<TabPanel>
+						<TabPanels flex="1 1 auto" overflow={'auto'}>
+							<TabPanel height={'full'}>
 								<SimpleGrid
 									columns={[0, 1, 2, 3, 4]}
 									spacing={4}
@@ -76,10 +81,10 @@ export const DevModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 									<DevModalTabSimCard onClick={() => setSelectedTab(2)} />
 								</SimpleGrid>
 							</TabPanel>
-							<TabPanel>
+							<TabPanel height={'full'}>
 								<DevModalTabPanelApis />
 							</TabPanel>
-							<TabPanel>
+							<TabPanel height={'full'}>
 								<DevModalTabPanelSim />
 							</TabPanel>
 						</TabPanels>

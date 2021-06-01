@@ -49,5 +49,7 @@ export const initialLoadSlice = createSlice({
 	},
 });
 
-export const { setLoadedSource } = initialLoadSlice.actions;
-export const { setLoadingStage } = initialLoadSlice.actions;
+export const {
+	setLoadedSource,
+	setLoadingStage,
+} = initialLoadSlice.actions;

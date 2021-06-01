@@ -5,6 +5,7 @@ import { simActions, SimResults } from '../slices/simSlice';
 import { PATHWAY_DELIMITER } from '../../consts/PATHWAY_DELIMITER';
 import { timeout } from '../../utils/timeoutPromise';
 import { OpponentsLookupByTeam } from '../../types/OpponentsLookupByTeam';
+import { addSimHistoryItem, SimHistoryRunDetails } from '../slices/simHistorySlice';
 
 /**
  * A data node that represents the pathway of related opponents that potentially connects the target teams.
@@ -111,14 +112,12 @@ export function* findCommonOpponents(): Generator<
 	yield put(setPendingResults());
 
 	try {
+		const startTime = Date.now();
 		const { team1, team2, levelMax } = state.sim;
 		const allTeamsOpponents = state.opponents;
 		// todo - these bangs are bad!
 		const processedTeamsLookup = new Set<string>();
 		processedTeamsLookup.add(team1!.team.nickname);
-
-		console.log('start search');
-		const start = Date.now();
 
 		// kickoff recursive search
 		let results: SimResults = yield call(recursivelyFindCommonOpponents,
@@ -163,9 +162,17 @@ export function* findCommonOpponents(): Generator<
 			return resultItem;
 		});
 
-		console.log('results took: ', (Date.now() - start) / 1000);
-
 		yield put(setResults(results));
+
+		const simRunDetails: SimHistoryRunDetails = {
+			duration: Date.now() - startTime,
+			id: -1, // internally set
+			length: results?.length ?? 0,
+			team1: team1!,
+			team2: team2!,
+		}
+
+		yield put(addSimHistoryItem(simRunDetails));
 	} catch(e) {
 		console.error(e);
 		yield put(setFailedResults());

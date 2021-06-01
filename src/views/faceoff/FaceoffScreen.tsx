@@ -84,7 +84,7 @@ export const FaceoffScreen = () => {
 							fontSize="l"
 							userSelect={'none'}
 						>
-							vs
+							vs.
 						</Text>
 					</GridItem>
 					<FaceoffScreenTeam

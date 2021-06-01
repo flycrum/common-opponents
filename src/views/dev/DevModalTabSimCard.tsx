@@ -1,39 +1,27 @@
 import React from 'react';
 import { DevModalTabCard } from './DevModalTabCard';
-import { LineChart, LineSeries, PointSeries, ScatterPoint } from 'reaviz';
-import theme from '../../theme';
-
-export const singleDateData = [
-	{ id: '0', key: new Date('2020-02-17T08:00:00.000Z'), data: 10 },
-	{ id: '1', key: new Date('2020-02-21T08:00:00.000Z'), data: 18 },
-	{ id: '2', key: new Date('2020-02-26T08:00:00.000Z'), data: 2 },
-	{ id: '3', key: new Date('2020-02-29T08:00:00.000Z'), data: 10 }
-];
+import { DevModalTabPanelSimChart } from './DevModalTabPanelSimChart';
+import { useAppSelector } from '../../store/store';
+import { Text } from '@chakra-ui/react';
 
 export const DevModalTabSimCard: React.FC<{onClick: () => void}> = ({ onClick }) => {
+	const { runs } = useAppSelector((state) => state.simHistory);
+
 	return (
 		<DevModalTabCard
 			heading={'Sim Runs'}
 			onClick={onClick}
 		>
-			<LineChart
-				data={singleDateData}
-				series={
-					<LineSeries
-						colorScheme={theme.colors.blue['500']}
-						symbols={
-							<PointSeries
-								show={true}
-								point={
-									<ScatterPoint
-
-									/>
-								}
-							/>
-						}
-					/>
-				}
-			/>
+			{!runs.length
+				? (
+					<Text fontSize={'sm'}>
+						No runs yet!
+					</Text>
+				)
+				: (
+					<DevModalTabPanelSimChart />
+				)
+			}
 		</DevModalTabCard>
 	);
 }

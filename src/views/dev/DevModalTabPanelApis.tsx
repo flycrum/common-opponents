@@ -10,7 +10,7 @@ import {
 	Tr,
 } from '@chakra-ui/react';
 import { useAppSelector } from '../../store/store';
-import { SuccessBadge } from '../components/SuccessBadge';
+import { PositiveBadge } from '../components/PositiveBadge';
 import { NeutralBadge } from '../components/NeutralBadge';
 import { DevModalTabCard } from './DevModalTabCard';
 
@@ -21,7 +21,10 @@ export const DevModalTabPanelApis = () => {
 	const { loadedSources } = useAppSelector((state) => state.initialData);
 
 	return (
-		<Table variant="striped">
+		<Table
+			size={'sm'}
+			variant="striped"
+		>
 			<Thead>
 				<Tr>
 					<Th>
@@ -34,7 +37,7 @@ export const DevModalTabPanelApis = () => {
 						Source
 					</Th>
 					<Th>
-						Length
+						No. Results
 					</Th>
 				</Tr>
 			</Thead>
@@ -52,9 +55,9 @@ export const DevModalTabPanelApis = () => {
 						</NeutralBadge>
 					</Td>
 					<Td>
-						<SuccessBadge>
+						<PositiveBadge>
 							{ loadedSources['apiTeams'].length }
-						</SuccessBadge>
+						</PositiveBadge>
 					</Td>
 				</Tr>
 				<Tr>
@@ -70,9 +73,9 @@ export const DevModalTabPanelApis = () => {
 						</NeutralBadge>
 					</Td>
 					<Td>
-						<SuccessBadge>
+						<PositiveBadge>
 							{ loadedSources['apiGames'].length }
-						</SuccessBadge>
+						</PositiveBadge>
 					</Td>
 				</Tr>
 			</Tbody>
@@ -96,9 +99,9 @@ export const DevModalTabApisGamesCard: React.FC<{onClick: () => void}> = ({ onCl
 			onClick={onClick}
 		>
 			<HStack alignItems={'center'}>
-				<SuccessBadge>
+				<PositiveBadge>
 					{ loadedSources[stage].length }
-				</SuccessBadge>
+				</PositiveBadge>
 				<Box as="span" color="gray.500" fontSize="sm">
 					results via
 				</Box>
@@ -120,9 +123,9 @@ export const DevModalTabApisTeamsCard: React.FC<{onClick: () => void}> = ({ onCl
 			onClick={onClick}
 		>
 			<HStack alignItems={'center'}>
-				<SuccessBadge>
+				<PositiveBadge>
 					{ loadedSources[stage].length }
-				</SuccessBadge>
+				</PositiveBadge>
 				<Box as="span" color="gray.500" fontSize="sm">
 					results via
 				</Box>
