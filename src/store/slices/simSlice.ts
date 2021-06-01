@@ -29,15 +29,15 @@ export const simSlice = createSlice({
 		team2: null as ApiTeamsResponseTeamItem | null,
 	},
 	reducers: {
-		setPendingResults: (state) => {
+		setSimFailedResults: (state) => {
+			state.isLoading = false;
+		},
+		setSimPendingResults: (state) => {
 			state.results = null;
 			state.isLoading = true;
 		},
-		setResults: (state, action: PayloadAction<SimResults | null>) => {
+		setSimResults: (state, action: PayloadAction<SimResults | null>) => {
 			state.results = action.payload;
-			state.isLoading = false;
-		},
-		setFailedResults: (state) => {
 			state.isLoading = false;
 		},
 		setSimTeam1: (state, action: PayloadAction<ApiTeamsResponseTeamItem>) => {
@@ -61,4 +61,11 @@ export const simSlice = createSlice({
 	},
 });
 
-export const simActions = { ...simSlice.actions };
+export const {
+	setSimFailedResults,
+	setSimPendingResults,
+	setSimResults,
+	setSimTeam1,
+	setSimTeam2,
+} = simSlice.actions;
+

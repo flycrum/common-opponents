@@ -3,7 +3,7 @@ import { sagaActions } from './saga';
 import { apiTeamsSelectors } from '../slices/apiTeamsSlice';
 import store from '../store';
 import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
-import { simActions } from '../slices/simSlice';
+import { setSimTeam1, setSimTeam2 } from '../slices/simSlice';
 
 /**
  * Randomly select and return a team.
@@ -35,7 +35,6 @@ export function* randomSelectTeamsSaga(): Generator<
 	any // accept
 > {
 	try {
-		const { setSimTeam1, setSimTeam2 } = simActions;
 		const team1 = selectRandomTeam();
 		const team2 = selectRandomTeam(team1);
 		yield put(setSimTeam1(team1));

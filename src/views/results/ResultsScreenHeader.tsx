@@ -6,9 +6,10 @@ import {
 	IconButton,
 } from '@chakra-ui/react';
 import { FaChevronLeft } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export const ResultsScreenHeader = () => {
+	const location = useLocation();
 	const history = useHistory();
 
 	return (
@@ -25,7 +26,13 @@ export const ResultsScreenHeader = () => {
 				size="lg"
 				icon={<FaChevronLeft />}
 				variant={'ghost'}
-				onClick={() => history.goBack()}
+				onClick={() => {
+					if (location.state) {
+						history.goBack();
+					} else {
+						history.push('/');
+					}
+				}}
 			/>
 			<Heading as="h1">
 				Results

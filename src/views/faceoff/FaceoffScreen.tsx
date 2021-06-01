@@ -119,7 +119,11 @@ export const FaceoffScreen = () => {
 						isRound
 						colorScheme={'yellow'}
 						aria-label="Find common opponents"
-						onClick={() => history.push(routePaths.RESULTS)}
+						onClick={() => history.push({
+							pathname: routePaths.RESULTS,
+							search: `?team1=${team1!.team.id}&team2=${team2!.team.id}`,
+							state: {}, // this is used to determine prior route
+						})}
 					>
 						<span>
 							GO!

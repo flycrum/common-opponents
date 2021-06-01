@@ -1,7 +1,6 @@
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../../store/store';
 import { apiTeamsSelectors } from '../../store/slices/apiTeamsSlice';
-import { simActions } from '../../store/slices/simSlice';
 import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
 import {
 	Box,
@@ -19,6 +18,7 @@ import { ListRowProps } from 'react-virtualized/dist/es/List';
 import { TeamsListModalRow } from './TeamsListModalRow';
 import { useHistory, useLocation } from 'react-router-dom';
 import type { LocationState } from '../../types/LocationState';
+import { setSimTeam1, setSimTeam2 } from '../../store/slices/simSlice';
 
 /** The target height used for reach virtualized row and also used to oversize team logos **/
 export const TEAMS_LIST_ROW_HEIGHT = 50;
@@ -42,8 +42,8 @@ export const TeamsListModal = () => {
 
 	const setTeam = (team: ApiTeamsResponseTeamItem) => {
 		dispatch(location.state.xtra === 1
-			? simActions.setSimTeam1(team)
-			: simActions.setSimTeam2(team)
+			? setSimTeam1(team)
+			: setSimTeam2(team)
 		);
 
 		onClose();

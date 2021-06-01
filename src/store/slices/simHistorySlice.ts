@@ -37,7 +37,6 @@ export const simHistorySlice = createSlice({
 	},
 });
 
-
 export const {
 	addSimHistoryItem,
 	clearSimHistory,

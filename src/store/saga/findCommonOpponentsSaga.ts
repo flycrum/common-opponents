@@ -1,11 +1,12 @@
 import { call, put, StrictEffect } from 'redux-saga/effects';
 import { sagaActions } from './saga';
 import store from '../store';
-import { simActions, SimResults } from '../slices/simSlice';
 import { PATHWAY_DELIMITER } from '../../consts/PATHWAY_DELIMITER';
 import { timeout } from '../../utils/timeoutPromise';
 import { OpponentsLookupByTeam } from '../../types/OpponentsLookupByTeam';
 import { addSimHistoryItem, SimHistoryRunDetails } from '../slices/simHistorySlice';
+import { setSimFailedResults, setSimPendingResults, setSimResults } from '../slices/simSlice';
+import type { SimResults } from '../slices/simSlice';
 
 /**
  * A data node that represents the pathway of related opponents that potentially connects the target teams.
@@ -106,10 +107,9 @@ export function* findCommonOpponents(): Generator<
 	any // accept
 > {
 	const state = store.getState();
-	const { setResults, setPendingResults, setFailedResults } = simActions;
 
 	yield put({ type: `${sagaActions.FIND_COMMON_OPPONENTS}_PENDING` });
-	yield put(setPendingResults());
+	yield put(setSimPendingResults());
 
 	try {
 		const startTime = Date.now();
@@ -162,7 +162,7 @@ export function* findCommonOpponents(): Generator<
 			return resultItem;
 		});
 
-		yield put(setResults(results));
+		yield put(setSimResults(results));
 
 		const simRunDetails: SimHistoryRunDetails = {
 			duration: Date.now() - startTime,
@@ -175,6 +175,6 @@ export function* findCommonOpponents(): Generator<
 		yield put(addSimHistoryItem(simRunDetails));
 	} catch(e) {
 		console.error(e);
-		yield put(setFailedResults());
+		yield put(setSimFailedResults());
 	}
 }

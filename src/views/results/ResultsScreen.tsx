@@ -13,11 +13,15 @@ import {
 } from '@chakra-ui/react';
 import { resultsScreenRowRenderer } from './resultsScreenRowRenderer';
 import { ResultsScreenHeader } from './ResultsScreenHeader';
+import { useHistory, useLocation } from 'react-router-dom';
+import { setSimTeam1, setSimTeam2 } from '../../store/slices/simSlice';
 
 /**
  * The results screen...obviously 😂
  */
 export const ResultsScreen = () => {
+	const location = useLocation();
+	const history = useHistory();
 	const dispatch = useAppDispatch()
 	const {
 		isLoading,
@@ -30,8 +34,34 @@ export const ResultsScreen = () => {
 	const { colorMode } = useColorMode();
 
 	useEffect(() => {
+		const queryParams = new URLSearchParams(location.search ?? '');
+		const queryParamTeam1 = queryParams.get('team1');
+		const queryParamTeam2 = queryParams.get('team2');
+
+		// check query string params
+		if (team1?.team.id !== queryParamTeam1 || team2?.team.id !== queryParamTeam2) {
+			const teamsList = Object.values(entities);
+			const foundTeam1 = teamsList.find((team) => team?.team.id === queryParamTeam1);
+			const foundTeam2 = teamsList.find((team) => team?.team.id === queryParamTeam2);
+
+			if (foundTeam1 && foundTeam2) {
+				dispatch(setSimTeam1(foundTeam1));
+				dispatch(setSimTeam2(foundTeam2));
+			}
+			else {
+				if (location.state) {
+					history.goBack();
+				} else {
+					history.push('/');
+				}
+
+				// must break out before dispatching to find opponents
+				return;
+			}
+		}
+
 		dispatch({ type: sagaActions.FIND_COMMON_OPPONENTS });
-	}, [dispatch]);
+	}, [team1, team2, entities, dispatch, location.search, location.state, history]);
 
 	function rowRenderer(props: ListRowProps) {
 		return resultsScreenRowRenderer(props, results, entities, colorMode);
