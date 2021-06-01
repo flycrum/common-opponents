@@ -48,7 +48,10 @@ export const FaceoffScreen = () => {
 			minH={'100vh'}
 			justifyContent={'center'}
 		>
-			<VStack spacing={10}>
+			<VStack
+				spacing={10}
+				padding={8}
+			>
 				<Heading
 					as="h1"
 					size="lg"

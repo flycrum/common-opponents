@@ -1,7 +1,7 @@
 import React from 'react';
 import {
 	Box,
-	Button,
+	Button, HStack,
 	Table,
 	Tbody,
 	Td, Text,
@@ -39,22 +39,24 @@ export const DevModalTabPanelSim = () => {
 						<Box
 							position={'relative'}
 							height={'full'}
-							maxHeight={'200px'}
+							maxHeight={'240px'}
+							mb={8}
 						>
-							<DevModalTabPanelSimChart />
-							<Button
-								position={'absolute'}
-								top={0}
-								right={0}
-								mt={-2}
-								size={'xs'}
-								variant="outline"
-								leftIcon={<FaRegTrashAlt />}
-								colorScheme="red"
-								onClick={() => dispatch(clearSimHistory())}
+							<HStack
+								justifyContent={'flex-end'}
+								mb={2}
 							>
-								Clear Runs
-							</Button>
+								<Button
+									size={'xs'}
+									variant="outline"
+									leftIcon={<FaRegTrashAlt />}
+									colorScheme="red"
+									onClick={() => dispatch(clearSimHistory())}
+								>
+									Clear Runs
+								</Button>
+							</HStack>
+							<DevModalTabPanelSimChart />
 						</Box>
 						<Table
 							size={'sm'}
