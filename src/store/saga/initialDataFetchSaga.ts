@@ -33,7 +33,7 @@ export function* fetchAllGamesSaga(): Generator<
 			{
 				apiKey: process.env.REACT_APP_MICROLINK_API_KEY,
 				data: {
-					apiGames: {
+					schedule: {
 						selectorAll: '#schedule tbody tr:not(.thead)',
 						attr: {
 							date: {
