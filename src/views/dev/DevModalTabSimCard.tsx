@@ -14,8 +14,11 @@ export const DevModalTabSimCard: React.FC<{onClick: () => void}> = ({ onClick })
 		>
 			{!runs.length
 				? (
-					<Text fontSize={'sm'}>
-						No runs yet!
+					<Text
+						fontSize={'sm'}
+						whiteSpace={'break-spaces'}
+					>
+						No results yet. Come back after some runs 😁
 					</Text>
 				)
 				: (

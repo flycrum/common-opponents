@@ -30,7 +30,11 @@ export const TeamsListModal = () => {
 	const location = useLocation<LocationState<1 | 2>>();
 	const history = useHistory();
 	const teams = useAppSelector(apiTeamsSelectors.selectAll);
+	const { team1, team2 } = useAppSelector((state) => state.sim);
 	const dispatch = useAppDispatch();
+	/** Don't let team play against themself **/
+	const selectedTeam = location.state.xtra === 1 ? team1 : team2;
+	const otherTeam = location.state.xtra === 1 ? team2 : team1;
 
 	function onClose () {
 		history.goBack();
@@ -44,6 +48,14 @@ export const TeamsListModal = () => {
 
 		onClose();
 	};
+
+	function getSuffix (team: ApiTeamsResponseTeamItem) {
+		if (otherTeam === team) {
+			return '(already selected)';
+		} if (['Old Dominion', 'UConn'].includes(team.team.nickname)) {
+			return '(DNP in 2020)';
+		}
+	}
 
 	function rowRenderer({ key, index, style }: ListRowProps) {
 		const team = teams[index];
@@ -60,8 +72,11 @@ export const TeamsListModal = () => {
 					}}
 				>
 					<TeamsListModalRow
+						disableTeam={otherTeam === team}
+						isAlreadySelected={selectedTeam === team}
 						onClick={() => setTeam(team)}
 						rowHeight={TEAMS_LIST_ROW_HEIGHT}
+						suffix={getSuffix(team)}
 						team={team}
 					/>
 				</Box>
@@ -93,7 +108,9 @@ export const TeamsListModal = () => {
 						{({height, width}) => (
 							<List
 								height={height}
-								overscanRowCount={20}
+								// todo: change to more reasonable number that doesn't include entire list
+								// hack: this makes it possible to use '.focus' to scroll to previously selected team
+								overscanRowCount={150}
 								rowCount={teams.length}
 								rowHeight={TEAMS_LIST_ROW_HEIGHT}
 								rowRenderer={rowRenderer}

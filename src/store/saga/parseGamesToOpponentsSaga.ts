@@ -67,7 +67,7 @@ export function* parseGamesToOpponentsSaga(): Generator<
 
 		// teamsAdapter.ids.forEach((nickname) => {
 		// 	if (!transformedResult[nickname]) {
-		// 		console.log('not found: ', nickname);
+		// 		console.log('not found: ', nickname, 'perhaps because they did not play in the given year');
 		// 	}
 		// });
 
