@@ -20,3 +20,15 @@ code {
 	font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
 	monospace;
 }
+
+/**
+ * Total hack to get tooltip to appear above modal since library has absolutely no other way to accomplish this.
+ * Note: since class selectors have a generated hash suffix, we use the beginsWith class^= attr selector api.
+ */
+[class^="Tooltip-module_disablePointer"] {
+	z-index: 99999 !important;
+}
+
+/*[class^="Tooltip-module_disablePointer"] * {*/
+/*	background-color: red;*/
+/*}*/
