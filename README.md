@@ -1,6 +1,20 @@
-# Getting Started with Create React App
+# Common Opponents
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Find all common opponents between two collegiate teams for the 2020 football season.
+
+![Screenshot](./docs/images/faceoff.png)
+
+To the nth degree, find connections and check out each game's outcome.
+
+![Screenshot](docs/images/results.png)
+
+In developer mode, dig deeper into the results, check out performance, and even re-run searches.
+
+![Screenshot](./docs/images/devsims.png)
+
+Work | play faster with cached api calls and the ability to bust the cache or even use mock data.
+
+![Screenshot](./docs/images/devapis.png)
 
 ## Available Scripts
 
