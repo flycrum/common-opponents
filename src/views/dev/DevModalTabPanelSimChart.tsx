@@ -54,7 +54,7 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 	const [ alertDetails, setAlertDetails ] = React.useState(null as null | typeof runs[0]);
 	const alertCancelRef = React.useRef<HTMLButtonElement | null>(null);
 	const tooltipClassName = useCss({
-		'--color-tooltip': theme.colors.gray['700'], // background
+		'--color-tooltip': theme.colors.gray['600'], // background
 		'--color-on-tooltip': theme.colors.white, // text color
 		padding: '10px',
 	});
@@ -194,8 +194,8 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 															cy="0"
 															r="6"
 															style={{
-																fill: theme.colors.blue['500'],
-																stroke: theme.colors.blue['500'],
+																fill: theme.colors.blue['600'],
+																stroke: theme.colors.blue['400'],
 																strokeWidth: 1.0,
 															}}
 															onClick={(e) => {
@@ -280,8 +280,8 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 													cy="0"
 													r={metadata.length / 100}
 													style={{
-														fill: theme.colors.blue['500'],
-														stroke: theme.colors.blue['500'],
+														fill: theme.colors.blue['600'],
+														stroke: theme.colors.blue['400'],
 														strokeWidth: 1.0,
 													}}
 													onClick={(e) => {
