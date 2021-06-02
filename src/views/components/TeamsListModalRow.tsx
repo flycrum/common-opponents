@@ -62,7 +62,7 @@ export const TeamsListModalRow = ({
 						width={rowHeight * rowHeightMultiplier}
 					/>
 					<Text as={'p'}>
-						{ team.team.displayName }
+						{ team.team.nickname }
 						{suffix && (
 							<>
 								{ ' ' }

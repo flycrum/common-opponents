@@ -13,9 +13,9 @@ import {
 	TabPanels,
 	Tabs,
 } from '@chakra-ui/react';
-import { DevModalTabPanelApis } from './DevModalTabPanelApis';
+import { DevModalTabPanelApis, DevModalTabPanelApisTab } from './DevModalTabPanelApis';
 import { DevModalTabSimCard } from './DevModalTabSimCard';
-import { DevModalTabPanelSim } from './DevModalTabPanelSim';
+import { DevModalTabPanelSim, DevModalTabPanelSimTab } from './DevModalTabPanelSim';
 import { DevModalTabApisTeamsCard } from './DevModalTabPanelApisTeamsCard';
 import { DevModalTabApisGamesCard } from './DevModalTabPanelApisGamesCard';
 
@@ -62,10 +62,10 @@ export const DevModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 								Dashboard
 							</Tab>
 							<Tab onClick={() => setSelectedTab(1)}>
-								<DevModalTabPanelApis.Tab />
+								<DevModalTabPanelApisTab />
 							</Tab>
 							<Tab onClick={() => setSelectedTab(2)}>
-								<DevModalTabPanelSim.Tab />
+								<DevModalTabPanelSimTab />
 							</Tab>
 						</TabList>
 						<TabPanels flex="1 1 auto" overflow={'auto'}>
@@ -76,14 +76,17 @@ export const DevModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 								>
 									<DevModalTabApisTeamsCard onClick={() => setSelectedTab(1)} />
 									<DevModalTabApisGamesCard onClick={() => setSelectedTab(1)} />
-									<DevModalTabSimCard onClick={() => setSelectedTab(2)} />
+									<DevModalTabSimCard
+										onClick={() => setSelectedTab(2)}
+										onCloseModal={onClose}
+									/>
 								</SimpleGrid>
 							</TabPanel>
 							<TabPanel height={'full'}>
 								<DevModalTabPanelApis />
 							</TabPanel>
 							<TabPanel height={'full'}>
-								<DevModalTabPanelSim />
+								<DevModalTabPanelSim onCloseModal={onClose} />
 							</TabPanel>
 						</TabPanels>
 					</Tabs>

@@ -4,7 +4,7 @@ import { DevModalTabPanelSimChart } from './DevModalTabPanelSimChart';
 import { useAppSelector } from '../../store/store';
 import { Text } from '@chakra-ui/react';
 
-export const DevModalTabSimCard: React.FC<{onClick: () => void}> = ({ onClick }) => {
+export const DevModalTabSimCard: React.FC<{onClick: () => void, onCloseModal: () => void}> = ({ onClick, onCloseModal }) => {
 	const { runs } = useAppSelector((state) => state.simHistory);
 
 	return (
@@ -22,7 +22,7 @@ export const DevModalTabSimCard: React.FC<{onClick: () => void}> = ({ onClick })
 					</Text>
 				)
 				: (
-					<DevModalTabPanelSimChart />
+					<DevModalTabPanelSimChart onCloseModal={onCloseModal} />
 				)
 			}
 		</DevModalTabCard>

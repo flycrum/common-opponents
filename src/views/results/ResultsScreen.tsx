@@ -107,13 +107,13 @@ export const ResultsScreen = () => {
 											Looks like the
 											{ ' ' }
 											<strong>
-												{ team1?.team.displayName }
+												{ team1?.team.nickname }
 											</strong>
 											{ ' ' }
 											and
 											{ ' ' }
 											<strong>
-												{ team2?.team.displayName }
+												{ team2?.team.nickname }
 											</strong>
 											{ ' ' }
 											didn't play a schedule where a close relationship could be found.

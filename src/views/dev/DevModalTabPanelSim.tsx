@@ -14,12 +14,28 @@ import { WarningBadge } from '../components/WarningBadge';
 import { NegativeBadge } from '../components/NegativeBadge';
 import { DevModalTabPanelSimChart } from './DevModalTabPanelSimChart';
 import { FaRegTrashAlt } from 'react-icons/fa';
-import { clearSimHistory } from '../../store/slices/simHistorySlice';
+import { clearSimHistory, SimHistoryRunDetails } from '../../store/slices/simHistorySlice';
+
+export const renderSimRunDuration = (runDetails: SimHistoryRunDetails) => (
+	runDetails.duration < 200
+		? runDetails.duration
+		: runDetails.duration < 400
+			? (
+				<WarningBadge>
+					{ runDetails.duration }
+				</WarningBadge>
+			)
+			: (
+				<NegativeBadge>
+					{ runDetails.duration }
+				</NegativeBadge>
+			)
+);
 
 /**
  * The sim's panel within dev tools.
  */
-export const DevModalTabPanelSim = () => {
+export const DevModalTabPanelSim: React.FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
 	const { runs } = useAppSelector((state) => state.simHistory);
 	const dispatch = useAppDispatch();
 
@@ -56,7 +72,7 @@ export const DevModalTabPanelSim = () => {
 									Clear Runs
 								</Button>
 							</HStack>
-							<DevModalTabPanelSimChart />
+							<DevModalTabPanelSimChart onCloseModal={onCloseModal}/>
 						</Box>
 						<Table
 							size={'sm'}
@@ -85,20 +101,7 @@ export const DevModalTabPanelSim = () => {
 											{ runDetails.id }
 										</Td>
 										<Td isNumeric>
-											{runDetails.duration < 200
-												? runDetails.duration
-												: runDetails.duration < 400
-													? (
-														<WarningBadge>
-															{ runDetails.duration }
-														</WarningBadge>
-													)
-													: (
-														<NegativeBadge>
-															{ runDetails.duration }
-														</NegativeBadge>
-													)
-												}
+											{ renderSimRunDuration(runDetails) }
 										</Td>
 										<Td isNumeric>
 											{ runDetails.length }
@@ -121,7 +124,7 @@ export const DevModalTabPanelSim = () => {
 	);
 };
 
-DevModalTabPanelSim.Tab = () => (
+export const DevModalTabPanelSimTab = () => (
 	<>
 		Sim Runs
 	</>

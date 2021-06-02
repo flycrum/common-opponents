@@ -170,7 +170,7 @@ export const DevModalTabPanelApis = () => {
 	);
 }
 
-DevModalTabPanelApis.Tab = () => (
+export const DevModalTabPanelApisTab = () => (
 	<>
 		APIs
 	</>
