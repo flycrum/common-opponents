@@ -22,7 +22,10 @@ export const DevModalTabSimCard: React.FC<{onClick: () => void, onCloseModal: ()
 					</Text>
 				)
 				: (
-					<DevModalTabPanelSimChart onCloseModal={onCloseModal} />
+					<DevModalTabPanelSimChart
+						isFull={false}
+						onCloseModal={onCloseModal}
+					/>
 				)
 			}
 		</DevModalTabCard>
