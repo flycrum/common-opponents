@@ -108,8 +108,8 @@ export const DevSimChartContainer: React.FC<{ isFull: boolean, onCloseModal: () 
 							fontWeight={'normal'}
 						>
 							{isShowingChartLine
-								? 'Line chart used to identify duration anomalies as indicated by spikes'
-								: 'Scatter chart used to see relationship between duration and results length'
+								? 'Performance over history of runs (spikes tend to be 👿)'
+								: 'Duration vs results length (big bubbles near bottom is 👿)'
 							}
 						</Heading>
 						<Text
@@ -118,7 +118,7 @@ export const DevSimChartContainer: React.FC<{ isFull: boolean, onCloseModal: () 
 						>
 							{isShowingChartLine
 								? 'Y: Duration of sims, X: Series of run'
-								: 'Y: Run results length, X: Series of runs, Bubbles: duration'
+								: 'Y: Run results length, X: Series of runs, Bubble Size: duration'
 							}
 						</Text>
 					</VStack>
