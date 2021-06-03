@@ -4,9 +4,11 @@ import { Button } from '@chakra-ui/react';
 import { FaMagic } from 'react-icons/fa';
 import { sagaActions } from '../../../store/saga/saga';
 import { delay } from '../../../utils/timeoutPromise';
+import { useMountedState } from 'react-use';
 
 export const DevBulkRunsButton: React.FC = () => {
 	const dispatch = useAppDispatch();
+	const isMounted = useMountedState();
 	const [ isGeneratingRuns, setIsGeneratingRuns ] = useState(false);
 
 	const onClickGenerateRuns = async () => {
@@ -20,7 +22,11 @@ export const DevBulkRunsButton: React.FC = () => {
 			dispatch({ type: sagaActions.RANDOM_SELECT_TEAMS });
 			dispatch({ type: sagaActions.FIND_COMMON_OPPONENTS });
 		}
-		setIsGeneratingRuns(false);
+
+		// check if mounted to avoid `Warning: Can't perform a React state update on an unmounted component`
+		if (isMounted()) {
+			setIsGeneratingRuns(false);
+		}
 	};
 
 	return (
