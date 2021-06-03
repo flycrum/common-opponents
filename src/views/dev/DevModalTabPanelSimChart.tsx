@@ -64,13 +64,12 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 		data: runDetails.duration,
 		metadata: runDetails,
 	} as ChartDataShape));
-	const dataScatter = dataLine.map((item) => {
-		// swap out duration for results length for the y-axis
-		return {
-			...item,
-			data: (item.metadata as typeof runs[0]).length,
-		};
-	});
+	const dataScatter = runs.map((runDetails, index) => ({
+		id: runDetails.id.toString(),
+		key: index, // start with zero cause...well, this chart library doesn't document a lot of hows except storybook
+		data: runDetails.length,
+		metadata: runDetails,
+	} as ChartDataShape));
 
 	const onCloseAlert = () => {
 		setAlertDetails(null);
@@ -219,14 +218,14 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 												modifiers={{
 													offset: '5px, 5px'
 												}}
-												content={({ id, metadata, y }:
+												content={({ id, metadata }:
 													{ id: ChartDataShape['id'], metadata: typeof runs[0], y: ChartDataShape['data'] }
 												) => (
 													<TooltipTemplate
 														className={tooltipClassName}
 														value={{
 															x: `${metadata.team1?.team.nickname} vs. ${metadata.team2?.team.nickname}`,
-															y: `Run ${id} = ${metadata.length} results in ${y}ms`,
+															y: `Run ${id} = ${metadata.length} results in ${metadata.duration}ms`,
 														}}
 													/>
 												)}
@@ -278,7 +277,7 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 												<circle
 													cx="0"
 													cy="0"
-													r={metadata.length / 100}
+													r={metadata.duration / 100}
 													style={{
 														fill: theme.colors.blue['600'],
 														stroke: theme.colors.blue['400'],
@@ -299,14 +298,14 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 												modifiers={{
 													offset: '5px, 5px'
 												}}
-												content={({ id, metadata, y }:
+												content={({ id, metadata }:
 													{ id: ChartDataShape['id'], metadata: typeof runs[0], y: ChartDataShape['data'] }
 												) => (
 													<TooltipTemplate
 														className={tooltipClassName}
 														value={{
 															x: `${metadata.team1?.team.nickname} vs. ${metadata.team2?.team.nickname}`,
-															y: `Run ${id} = ${metadata.length} results in ${y}ms`,
+															y: `Run ${id} = ${metadata.length} results in ${metadata.duration}ms`,
 														}}
 													/>
 												)}
