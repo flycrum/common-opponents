@@ -156,12 +156,18 @@ export const DevApisPanel = () => {
 						<Button
 							size={'xs'}
 							variant="outline"
-							leftIcon={<FaRegTrashAlt />}
+							leftIcon={hasCache.apiGames ? <FaRegTrashAlt /> : <VscDebugRestart />}
 							colorScheme="red"
 							// todo - move to saga?
-							onClick={() => clearCache('apiGames')}
+							onClick={() => hasCache.apiGames
+								? clearCache('apiGames')
+								: window.location.reload()
+							}
 						>
-							Clear
+							{hasCache.apiGames
+								? 'Clear'
+								: 'Restart'
+							}
 						</Button>
 					</Td>
 				</Tr>
