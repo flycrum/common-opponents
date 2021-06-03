@@ -13,11 +13,11 @@ import {
 	TabPanels,
 	Tabs,
 } from '@chakra-ui/react';
-import { DevModalTabPanelApis, DevModalTabPanelApisTab } from './DevModalTabPanelApis';
-import { DevModalTabSimCard } from './DevModalTabSimCard';
-import { DevModalTabPanelSim, DevModalTabPanelSimTab } from './DevModalTabPanelSim';
-import { DevModalTabApisTeamsCard } from './DevModalTabPanelApisTeamsCard';
-import { DevModalTabApisGamesCard } from './DevModalTabPanelApisGamesCard';
+import { DevApisPanel, DevModalTabPanelApisTab } from './apis/DevApisPanel';
+import { DevSimDashboardCard } from './sim/DevSimDashboardCard';
+import { DevSimPanel, DevModalTabPanelSimTab } from './sim/DevSimPanel';
+import { DevModalTabApisTeamsCard } from './apis/DevApisTeamsDashboardCard';
+import { DevModalTabApisGamesCard } from './apis/DevApisGamesDashboardCard';
 
 /**
  * The virtualized list to display and allow for the selection of a team.
@@ -76,17 +76,17 @@ export const DevModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 								>
 									<DevModalTabApisTeamsCard onClick={() => setSelectedTab(1)} />
 									<DevModalTabApisGamesCard onClick={() => setSelectedTab(1)} />
-									<DevModalTabSimCard
+									<DevSimDashboardCard
 										onClick={() => setSelectedTab(2)}
 										onCloseModal={onClose}
 									/>
 								</SimpleGrid>
 							</TabPanel>
 							<TabPanel height={'full'}>
-								<DevModalTabPanelApis />
+								<DevApisPanel />
 							</TabPanel>
 							<TabPanel height={'full'}>
-								<DevModalTabPanelSim onCloseModal={onClose} />
+								<DevSimPanel onCloseModal={onClose} />
 							</TabPanel>
 						</TabPanels>
 					</Tabs>

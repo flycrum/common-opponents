@@ -22,7 +22,7 @@ import type  { LocationState } from './types/LocationState';
 import { TeamsListModal } from './views/components/TeamsListModal';
 import { routePaths } from './consts/routePaths';
 import { ResultsScreen } from './views/results/ResultsScreen';
-import { DevButton } from './views/dev/DevButton';
+import { DevButton } from './views/dev/components/DevButton';
 import { DevModal } from './views/dev/DevModal';
 import { useBoolean } from 'react-use';
 import { isDevEnv } from './utils/isDevEnv';

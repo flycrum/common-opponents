@@ -5,7 +5,7 @@ import {
 	Heading, VStack,
 } from '@chakra-ui/react';
 
-export const DevModalTabCard: React.FC<{
+export const DevDashboardCard: React.FC<{
 	heading: React.ReactNode,
 	onClick: () => void,
 }> = ({

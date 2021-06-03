@@ -20,8 +20,8 @@ import {
 	TooltipArea,
 	TooltipTemplate,
 } from 'reaviz';
-import theme from '../../theme';
-import { useAppDispatch, useAppSelector } from '../../store/store';
+import theme from '../../../theme';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { useBoolean, useCss } from 'react-use';
 import {
 	AlertDialog,
@@ -34,20 +34,20 @@ import {
 	Button, ButtonGroup, Heading, HStack,
 	Text, VStack,
 } from '@chakra-ui/react';
-import { setSimTeam1, setSimTeam2 } from '../../store/slices/simSlice';
-import { routePaths } from '../../consts/routePaths';
+import { setSimTeam1, setSimTeam2 } from '../../../store/slices/simSlice';
+import { routePaths } from '../../../consts/routePaths';
 import { useHistory } from 'react-router-dom';
-import { renderSimRunDuration } from './DevModalTabPanelSim';
+import { renderSimRunDuration } from './DevSimPanel';
 import { AiOutlineDotChart, AiOutlineLineChart } from 'react-icons/all';
 import { FaRegTrashAlt } from 'react-icons/fa';
-import { clearSimHistory } from '../../store/slices/simHistorySlice';
-import { GenerateRunsButton } from '../components/GenerateRunsButton';
+import { clearSimHistory } from '../../../store/slices/simHistorySlice';
+import { DevBulkRunsButton } from '../components/DevBulkRunsButton';
 
 /**
  * Chart to display find opponent sim runs.
  * @todo Split up this overly complex component.
  */
-export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal: () => void}> = ({ isFull, onCloseModal }) => {
+export const DevSimChartContainer: React.FC<{ isFull: boolean, onCloseModal: () => void}> = ({ isFull, onCloseModal }) => {
 	const dispatch = useAppDispatch();
 	const { runs } = useAppSelector((state) => state.simHistory);
 	const history = useHistory();
@@ -135,7 +135,7 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 								: 'Switch to Line Chart'
 							}
 						</Button>
-						<GenerateRunsButton />
+						<DevBulkRunsButton />
 						<Button
 							size={'xs'}
 							variant="outline"

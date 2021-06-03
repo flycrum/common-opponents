@@ -9,12 +9,12 @@ import {
 	Thead,
 	Tr,
 } from '@chakra-ui/react';
-import { useAppSelector } from '../../store/store';
-import { WarningBadge } from '../components/WarningBadge';
-import { NegativeBadge } from '../components/NegativeBadge';
-import { DevModalTabPanelSimChart } from './DevModalTabPanelSimChart';
-import type { SimHistoryRunDetails } from '../../store/slices/simHistorySlice';
-import { GenerateRunsButton } from '../components/GenerateRunsButton';
+import { useAppSelector } from '../../../store/store';
+import { WarningBadge } from '../../components/WarningBadge';
+import { NegativeBadge } from '../../components/NegativeBadge';
+import { DevSimChartContainer } from './DevSimChartContainer';
+import type { SimHistoryRunDetails } from '../../../store/slices/simHistorySlice';
+import { DevBulkRunsButton } from '../components/DevBulkRunsButton';
 
 export const renderSimRunDuration = (runDetails: SimHistoryRunDetails) => (
 	runDetails.duration < 200
@@ -35,7 +35,7 @@ export const renderSimRunDuration = (runDetails: SimHistoryRunDetails) => (
 /**
  * The sim's panel within dev tools.
  */
-export const DevModalTabPanelSim: React.FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
+export const DevSimPanel: React.FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
 	const { runs } = useAppSelector((state) => state.simHistory);
 
 	return (
@@ -50,7 +50,7 @@ export const DevModalTabPanelSim: React.FC<{ onCloseModal: () => void }> = ({ on
 						>
 							No results yet. Generate some quick results below or come back after running some searches 😁
 						</Text>
-						<GenerateRunsButton />
+						<DevBulkRunsButton />
 					</>
 				)
 				: (
@@ -61,7 +61,7 @@ export const DevModalTabPanelSim: React.FC<{ onCloseModal: () => void }> = ({ on
 							maxHeight={'280px'}
 							mb={6}
 						>
-							<DevModalTabPanelSimChart
+							<DevSimChartContainer
 								isFull
 								onCloseModal={onCloseModal}
 							/>

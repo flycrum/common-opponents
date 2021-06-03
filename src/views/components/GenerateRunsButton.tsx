@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '../../store/store';
+import { useAppDispatch } from '../../../store/store';
 import { Button } from '@chakra-ui/react';
 import { FaMagic } from 'react-icons/fa';
-import { sagaActions } from '../../store/saga/saga';
-import { delay } from '../../utils/timeoutPromise';
+import { sagaActions } from '../../../store/saga/saga';
+import { delay } from '../../../utils/timeoutPromise';
 
-export const GenerateRunsButton: React.FC = () => {
+export const DevBulkRunsButton: React.FC = () => {
 	const dispatch = useAppDispatch();
 	const [ isGeneratingRuns, setIsGeneratingRuns ] = useState(false);
 

@@ -1,14 +1,14 @@
 import React from 'react';
-import { DevModalTabCard } from './DevModalTabCard';
-import { DevModalTabPanelSimChart } from './DevModalTabPanelSimChart';
-import { useAppSelector } from '../../store/store';
+import { DevDashboardCard } from '../components/DevDashboardCard';
+import { DevSimChartContainer } from './DevSimChartContainer';
+import { useAppSelector } from '../../../store/store';
 import { Box, Text } from '@chakra-ui/react';
 
-export const DevModalTabSimCard: React.FC<{onClick: () => void, onCloseModal: () => void}> = ({ onClick, onCloseModal }) => {
+export const DevSimDashboardCard: React.FC<{onClick: () => void, onCloseModal: () => void}> = ({ onClick, onCloseModal }) => {
 	const { runs } = useAppSelector((state) => state.simHistory);
 
 	return (
-		<DevModalTabCard
+		<DevDashboardCard
 			heading={'Sim Runs'}
 			onClick={onClick}
 		>
@@ -33,13 +33,13 @@ export const DevModalTabSimCard: React.FC<{onClick: () => void, onCloseModal: ()
 					</>
 				)
 				: (
-					<DevModalTabPanelSimChart
+					<DevSimChartContainer
 						isFull={false}
 						onCloseModal={onCloseModal}
 					/>
 				)
 			}
-		</DevModalTabCard>
+		</DevDashboardCard>
 	);
 }
 

@@ -9,15 +9,15 @@ import {
 	Thead,
 	Tr,
 } from '@chakra-ui/react';
-import store, { useAppDispatch, useAppSelector } from '../../store/store';
-import { PositiveBadge } from '../components/PositiveBadge';
-import { NeutralBadge } from '../components/NeutralBadge';
+import store, { useAppDispatch, useAppSelector } from '../../../store/store';
+import { PositiveBadge } from '../../components/PositiveBadge';
+import { NeutralBadge } from '../../components/NeutralBadge';
 import {
 	getOptionsUseMockApiGames,
 	getOptionsUseMockApiTeams,
 	getPersistKeyByStateName
-} from '../../store/storeHelpers';
-import { setOptionsUseMockApiGames, setOptionsUseMockApiTeams } from '../../store/slices/optionsSlice';
+} from '../../../store/storeHelpers';
+import { setOptionsUseMockApiGames, setOptionsUseMockApiTeams } from '../../../store/slices/optionsSlice';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { VscDebugRestart } from 'react-icons/vsc';
 
@@ -25,7 +25,7 @@ import { VscDebugRestart } from 'react-icons/vsc';
  * The APIs panel within dev tools.
  * @todo this file needs to be refactored, cleaned up, split out, etc.
  */
-export const DevModalTabPanelApis = () => {
+export const DevApisPanel = () => {
 	const [hasCache, updateHasCache] = React.useState({
 		apiGames: hasCacheInLocalStorage('apiGames'),
 		apiTeams: hasCacheInLocalStorage('apiTeams'),

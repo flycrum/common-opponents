@@ -3,18 +3,18 @@ import {
 	Box, Checkbox,
 	HStack,
 } from '@chakra-ui/react';
-import store, { useAppSelector } from '../../store/store';
-import { PositiveBadge } from '../components/PositiveBadge';
-import { NeutralBadge } from '../components/NeutralBadge';
-import { DevModalTabCard } from './DevModalTabCard';
-import { getOptionsUseMockApiTeams } from '../../store/storeHelpers';
+import store, { useAppSelector } from '../../../store/store';
+import { PositiveBadge } from '../../components/PositiveBadge';
+import { NeutralBadge } from '../../components/NeutralBadge';
+import { DevDashboardCard } from '../components/DevDashboardCard';
+import { getOptionsUseMockApiGames } from '../../../store/storeHelpers';
 
-export const DevModalTabApisTeamsCard: React.FC<{onClick: () => void}> = ({ onClick }) => {
+export const DevModalTabApisGamesCard: React.FC<{onClick: () => void}> = ({ onClick }) => {
 	const { loadedSources } = useAppSelector((state) => state.initialData);
-	const stage = 'apiTeams';
+	const stage = 'apiGames';
 
 	return (
-		<DevModalTabCard
+		<DevDashboardCard
 			heading={`APIs / ${stage}`}
 			onClick={onClick}
 		>
@@ -23,7 +23,7 @@ export const DevModalTabApisTeamsCard: React.FC<{onClick: () => void}> = ({ onCl
 					{ loadedSources[stage].length }
 				</PositiveBadge>
 				<Box as="span" color="gray.500" fontSize="sm">
-					results via
+					results
 				</Box>
 			</HStack>
 			<HStack alignItems={'center'}>
@@ -36,13 +36,13 @@ export const DevModalTabApisTeamsCard: React.FC<{onClick: () => void}> = ({ onCl
 			</HStack>
 			<HStack alignItems={'center'}>
 				<Checkbox
-					defaultIsChecked={!!getOptionsUseMockApiTeams(store.getState())}
+					defaultIsChecked={!!getOptionsUseMockApiGames(store.getState())}
 					isDisabled
 				/>
 				<Box as="span" color="gray.500" fontSize="sm">
 					use mock data
 				</Box>
 			</HStack>
-		</DevModalTabCard>
+		</DevDashboardCard>
 	);
 }
