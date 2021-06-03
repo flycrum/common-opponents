@@ -41,6 +41,7 @@ import { renderSimRunDuration } from './DevModalTabPanelSim';
 import { AiOutlineDotChart, AiOutlineLineChart } from 'react-icons/all';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { clearSimHistory } from '../../store/slices/simHistorySlice';
+import { GenerateRunsButton } from '../components/GenerateRunsButton';
 
 /**
  * Chart to display find opponent sim runs.
@@ -74,6 +75,7 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 	const onCloseAlert = () => {
 		setAlertDetails(null);
 	};
+
 	const onClickAlert = () => {
 		dispatch(setSimTeam1(alertDetails!.team1));
 		dispatch(setSimTeam2(alertDetails!.team2));
@@ -133,6 +135,7 @@ export const DevModalTabPanelSimChart: React.FC<{ isFull: boolean, onCloseModal:
 								: 'Switch to Line Chart'
 							}
 						</Button>
+						<GenerateRunsButton />
 						<Button
 							size={'xs'}
 							variant="outline"

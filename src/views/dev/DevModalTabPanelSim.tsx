@@ -14,6 +14,7 @@ import { WarningBadge } from '../components/WarningBadge';
 import { NegativeBadge } from '../components/NegativeBadge';
 import { DevModalTabPanelSimChart } from './DevModalTabPanelSimChart';
 import type { SimHistoryRunDetails } from '../../store/slices/simHistorySlice';
+import { GenerateRunsButton } from '../components/GenerateRunsButton';
 
 export const renderSimRunDuration = (runDetails: SimHistoryRunDetails) => (
 	runDetails.duration < 200
@@ -41,12 +42,16 @@ export const DevModalTabPanelSim: React.FC<{ onCloseModal: () => void }> = ({ on
 		<Box height={'full'}>
 			{!runs.length
 				? (
-					<Text
-						fontSize={'sm'}
-						whiteSpace={'break-spaces'}
-					>
-						No results yet. Come back after some runs 😁
-					</Text>
+					<>
+						<Text
+							mb={4}
+							fontSize={'sm'}
+							whiteSpace={'break-spaces'}
+						>
+							No results yet. Generate some quick results below or come back after running some searches 😁
+						</Text>
+						<GenerateRunsButton />
+					</>
 				)
 				: (
 					<>
