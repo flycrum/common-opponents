@@ -280,7 +280,8 @@ export const DevSimChartContainer: React.FC<{ isFull: boolean, onCloseModal: () 
 												<circle
 													cx="0"
 													cy="0"
-													r={metadata.duration / 100}
+													// limit size of bubbles
+													r={Math.min(30, metadata.duration / 20)}
 													style={{
 														fill: theme.colors.blue['600'],
 														stroke: theme.colors.blue['400'],
