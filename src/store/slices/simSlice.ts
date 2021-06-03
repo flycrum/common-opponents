@@ -21,7 +21,9 @@ export type SimResults = {
 export const simSlice = createSlice({
 	name: 'sim',
 	initialState: {
-		isLoading: false as boolean,
+		isRunning: false as boolean,
+		/** Whether currently in the process of generating a large dataset of sim results **/
+		isRunningBulk: false as boolean,
 		/** The max depth common opponents will recursively search **/
 		levelMax: 5,
 		results: null as SimResults | null,
@@ -29,16 +31,19 @@ export const simSlice = createSlice({
 		team2: null as ApiTeamsResponseTeamItem | null,
 	},
 	reducers: {
+		setSimBulkMode: (state, action: PayloadAction<boolean>) => {
+			state.isRunningBulk = action.payload;
+		},
 		setSimFailedResults: (state) => {
-			state.isLoading = false;
+			state.isRunning = false;
 		},
 		setSimPendingResults: (state) => {
 			state.results = null;
-			state.isLoading = true;
+			state.isRunning = true;
 		},
 		setSimResults: (state, action: PayloadAction<SimResults | null>) => {
 			state.results = action.payload;
-			state.isLoading = false;
+			state.isRunning = false;
 		},
 		setSimTeam1: (state, action: PayloadAction<ApiTeamsResponseTeamItem>) => {
 			if (action.payload !== state.team1) {
@@ -62,6 +67,7 @@ export const simSlice = createSlice({
 });
 
 export const {
+	setSimBulkMode,
 	setSimFailedResults,
 	setSimPendingResults,
 	setSimResults,

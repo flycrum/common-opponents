@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
-import { useAppDispatch } from '../../../store/store';
+import React from 'react';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { Button } from '@chakra-ui/react';
 import { FaMagic } from 'react-icons/fa';
 import { sagaActions } from '../../../store/saga/saga';
 import { delay } from '../../../utils/timeoutPromise';
-import { useMountedState } from 'react-use';
+import { setSimBulkMode } from '../../../store/slices/simSlice';
 
 export const DevBulkRunsButton: React.FC = () => {
 	const dispatch = useAppDispatch();
-	const isMounted = useMountedState();
-	const [ isGeneratingRuns, setIsGeneratingRuns ] = useState(false);
+	const { isRunningBulk } = useAppSelector((state) => state.sim);
 
 	const onClickGenerateRuns = async () => {
-		setIsGeneratingRuns(true);
+		dispatch(setSimBulkMode(true));
 
 		for (let i = 0 ; i < 100 ; i++) {
 			if (i !== 0) {
@@ -23,18 +22,15 @@ export const DevBulkRunsButton: React.FC = () => {
 			dispatch({ type: sagaActions.FIND_COMMON_OPPONENTS });
 		}
 
-		// check if mounted to avoid `Warning: Can't perform a React state update on an unmounted component`
-		if (isMounted()) {
-			setIsGeneratingRuns(false);
-		}
+		dispatch(setSimBulkMode(false));
 	};
 
 	return (
 		<Button
 			size={'xs'}
 			variant="outline"
-			isLoading={isGeneratingRuns}
-			leftIcon={isGeneratingRuns ? undefined : <FaMagic />}
+			isLoading={isRunningBulk}
+			leftIcon={isRunningBulk ? undefined : <FaMagic />}
 			colorScheme="black"
 			onClick={() => onClickGenerateRuns()}
 		>

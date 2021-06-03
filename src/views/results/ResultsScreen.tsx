@@ -24,7 +24,8 @@ export const ResultsScreen = () => {
 	const history = useHistory();
 	const dispatch = useAppDispatch()
 	const {
-		isLoading,
+		isRunning,
+		isRunningBulk,
 		levelMax,
 		results,
 		team1,
@@ -38,8 +39,8 @@ export const ResultsScreen = () => {
 		const queryParamTeam1 = queryParams.get('team1');
 		const queryParamTeam2 = queryParams.get('team2');
 
-		// check query string params
-		if (team1?.team.id !== queryParamTeam1 || team2?.team.id !== queryParamTeam2) {
+		// check query string params if not actively running (i.e. bulk generation in dev tools)
+		if (!isRunningBulk && (team1?.team.id !== queryParamTeam1 || team2?.team.id !== queryParamTeam2)) {
 			const teamsList = Object.values(entities);
 			const foundTeam1 = teamsList.find((team) => team?.team.id === queryParamTeam1);
 			const foundTeam2 = teamsList.find((team) => team?.team.id === queryParamTeam2);
@@ -61,7 +62,7 @@ export const ResultsScreen = () => {
 		}
 
 		dispatch({ type: sagaActions.FIND_COMMON_OPPONENTS });
-	}, [team1, team2, entities, dispatch, location.search, location.state, history]);
+	}, [isRunningBulk, team1, team2, entities, dispatch, location.search, location.state, history]);
 
 	function rowRenderer(props: ListRowProps) {
 		return resultsScreenRowRenderer(props, results, entities, colorMode);
@@ -78,14 +79,14 @@ export const ResultsScreen = () => {
 					marginTop: '0',
 				}}
 			>
-				{!results?.length
+				{!results?.length || isRunning || isRunningBulk
 					? (
 						<VStack
 							alignItems={'center'}
 							justifyContent={'center'}
 							height={'full'}
 						>
-							{isLoading
+							{isRunning || isRunningBulk
 								? (
 									<Spinner
 										thickness="4px"
