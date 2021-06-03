@@ -1,7 +1,5 @@
 import * as React from 'react';
-import {
-	IconButton,
-} from '@chakra-ui/react';
+import { IconButton } from '@chakra-ui/react';
 import { FaDev } from 'react-icons/fa';
 
 /**

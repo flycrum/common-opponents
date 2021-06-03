@@ -12,29 +12,11 @@ import {
 	Tr,
 } from '@chakra-ui/react';
 import { useAppDispatch, useAppSelector } from '../../../store/store';
-import { WarningBadge } from '../../components/WarningBadge';
-import { NegativeBadge } from '../../components/NegativeBadge';
 import { DevSimChartContainer } from './DevSimChartContainer';
 import { DevBulkRunsButton } from '../components/DevBulkRunsButton';
 import { FaRegTrashAlt } from 'react-icons/fa';
-import type { SimHistoryRunDetails } from '../../../types/SimHistoryRunDetails';
 import { removeSimHistoryItem, simHistorySelectors } from '../../../store/slices/simHistorySlice';
-
-export const renderSimRunDuration = (runDetails: SimHistoryRunDetails) => (
-	runDetails.duration < 200
-		? runDetails.duration
-		: runDetails.duration < 400
-			? (
-				<WarningBadge>
-					{ runDetails.duration }
-				</WarningBadge>
-			)
-			: (
-				<NegativeBadge>
-					{ runDetails.duration }
-				</NegativeBadge>
-			)
-);
+import { renderSimRunDuration } from '../utils/renderSimRunDuration';
 
 /**
  * The sim's panel within dev tools.

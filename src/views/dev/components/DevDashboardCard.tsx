@@ -2,7 +2,8 @@ import React from 'react';
 import {
 	Box,
 	Button,
-	Heading, VStack,
+	Heading,
+	VStack,
 } from '@chakra-ui/react';
 
 export const DevDashboardCard: React.FC<{

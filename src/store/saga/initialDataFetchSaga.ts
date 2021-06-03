@@ -1,6 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 import store from '../store';
-import { LoadedSource, setLoadedSource, setLoadingStage } from '../slices/initialLoadSlice';
+import { setLoadedSource, setLoadingStage } from '../slices/initialLoadSlice';
+import type { LoadedSource } from '../slices/initialLoadSlice';
 import { parseGamesToOpponentsSaga } from './parseGamesToOpponentsSaga';
 import { fetchApiTeamsSaga } from './fetchApiTeamsSaga';
 import { fetchApiGamesSaga } from './fetchApiGamesSaga';

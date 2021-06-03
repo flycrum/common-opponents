@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import {
 	Button,
 	Checkbox,
@@ -20,20 +20,47 @@ import {
 import { setOptionsUseMockApiGames, setOptionsUseMockApiTeams } from '../../../store/slices/optionsSlice';
 import { FaRegTrashAlt } from 'react-icons/fa';
 import { VscDebugRestart } from 'react-icons/vsc';
+import type { LoadingStage } from '../../../store/slices/initialLoadSlice';
+
+interface RowData {
+	name: LoadingStage;
+	provider: string;
+	storeName: LoadingStage;
+	getOptionsUseMock: () => any;
+	dispatchSetOptionsUseMock: (e: ChangeEvent<HTMLInputElement>) => any;
+	hasCache: () => boolean;
+}
 
 /**
  * The APIs panel within dev tools.
- * @todo this file needs to be refactored, cleaned up, split out, etc.
  */
 export const DevApisPanel = () => {
+	const dispatch = useAppDispatch();
 	const [hasCache, updateHasCache] = React.useState({
 		apiGames: hasCacheInLocalStorage('apiGames'),
 		apiTeams: hasCacheInLocalStorage('apiTeams'),
 	});
 	const { loadedSources } = useAppSelector((state) => state.initialData);
-	const dispatch = useAppDispatch();
+	const rowData: RowData[] = [
+		{
+			name:  'apiTeams',
+			provider: 'espn.com',
+			storeName: 'apiTeams',
+			getOptionsUseMock: () => getOptionsUseMockApiTeams(store.getState()),
+			dispatchSetOptionsUseMock: (e: ChangeEvent<HTMLInputElement>) => dispatch(setOptionsUseMockApiTeams(e.target.checked)),
+			hasCache: () => hasCache.apiTeams,
+		},
+		{
+			name:  'apiGames',
+			provider: 'sports-reference.com',
+			storeName: 'apiGames',
+			getOptionsUseMock: () => getOptionsUseMockApiGames(store.getState()),
+			dispatchSetOptionsUseMock: (e: ChangeEvent<HTMLInputElement>) => dispatch(setOptionsUseMockApiGames(e.target.checked)),
+			hasCache: () => hasCache.apiGames,
+		},
+	];
 
-	function clearCache (stateName: string) {
+	function clearCache (stateName: LoadingStage) {
 		window.localStorage.removeItem(getPersistKeyByStateName(stateName));
 		updateHasCache({
 			apiGames: hasCacheInLocalStorage('apiGames'),
@@ -41,7 +68,7 @@ export const DevApisPanel = () => {
 		});
 	}
 
-	function hasCacheInLocalStorage (stateName: string) {
+	function hasCacheInLocalStorage (stateName: LoadingStage) {
 		return window.localStorage.hasOwnProperty(getPersistKeyByStateName(stateName));
 	}
 
@@ -71,106 +98,60 @@ export const DevApisPanel = () => {
 						Cached
 					</Th>
 					<Th>
-
+						Actions
 					</Th>
 				</Tr>
 			</Thead>
 			<Tbody>
-				<Tr>
-					<Td>
-						apiTeams
-					</Td>
-					<Td>
-						espn.com
-					</Td>
-					<Td>
-						<PositiveBadge>
-							{ loadedSources['apiTeams'].length }
-						</PositiveBadge>
-					</Td>
-					<Td>
-						<NeutralBadge>
-							{ loadedSources['apiTeams'].source }
-						</NeutralBadge>
-					</Td>
-					<Td>
-						<Checkbox
-							defaultIsChecked={!!getOptionsUseMockApiTeams(store.getState())}
-							onChange={(e) => dispatch(setOptionsUseMockApiTeams(e.target.checked))}
-						/>
-					</Td>
-					<Td>
-						<Checkbox
-							isChecked={hasCache.apiTeams}
-							isDisabled
-						/>
-					</Td>
-					<Td>
-						<Button
-							size={'xs'}
-							variant="outline"
-							leftIcon={hasCache.apiTeams ? <FaRegTrashAlt /> : <VscDebugRestart />}
-							colorScheme="red"
-							onClick={() => hasCache.apiTeams
-								? clearCache('apiTeams')
-								: window.location.reload()
-							}
-						>
-							{hasCache.apiTeams
-								? 'Clear'
-								: 'Restart'
-							}
-						</Button>
-					</Td>
-				</Tr>
-				<Tr>
-					<Td>
-						apiGames
-					</Td>
-					<Td>
-						sports-reference.com
-					</Td>
-					<Td>
-						<PositiveBadge>
-							{ loadedSources['apiGames'].length }
-						</PositiveBadge>
-					</Td>
-					<Td>
-						<NeutralBadge>
-							{ loadedSources['apiGames'].source }
-						</NeutralBadge>
-					</Td>
-					<Td>
-						<Checkbox
-							defaultIsChecked={!!getOptionsUseMockApiGames(store.getState())}
-							onChange={(e) => dispatch(setOptionsUseMockApiGames(e.target.checked))}
-						/>
-					</Td>
-					<Td>
-						<Checkbox
-							isChecked={hasCache.apiGames}
-							isDisabled
-						/>
-					</Td>
-					<Td>
-						<Button
-							size={'xs'}
-							variant="outline"
-							leftIcon={hasCache.apiGames ? <FaRegTrashAlt /> : <VscDebugRestart />}
-							colorScheme="red"
-							// todo - move to saga?
-							onClick={() => hasCache.apiGames
-								? clearCache('apiGames')
-								: window.location.reload()
-							}
-						>
-							{hasCache.apiGames
-								? 'Clear'
-								: 'Restart'
-							}
-						</Button>
-					</Td>
-				</Tr>
+				{rowData.map((row, index) => (
+					<Tr key={index}>
+						<Td>
+							{ row.name }
+						</Td>
+						<Td>
+							{ row.provider }
+						</Td>
+						<Td>
+							<PositiveBadge>
+								{ loadedSources[row.storeName].length }
+							</PositiveBadge>
+						</Td>
+						<Td>
+							<NeutralBadge>
+								{ loadedSources[row.storeName].source }
+							</NeutralBadge>
+						</Td>
+						<Td>
+							<Checkbox
+								defaultIsChecked={!!row.getOptionsUseMock()}
+								onChange={row.dispatchSetOptionsUseMock}
+							/>
+						</Td>
+						<Td>
+							<Checkbox
+								isChecked={hasCache[row.storeName]}
+								isDisabled
+							/>
+						</Td>
+						<Td>
+							<Button
+								size={'xs'}
+								variant="outline"
+								leftIcon={hasCache[row.storeName] ? <FaRegTrashAlt /> : <VscDebugRestart />}
+								colorScheme="red"
+								onClick={() => hasCache[row.storeName]
+									? clearCache(row.storeName)
+									: window.location.reload()
+								}
+							>
+								{hasCache[row.storeName]
+									? 'Clear'
+									: 'Restart'
+								}
+							</Button>
+						</Td>
+					</Tr>
+				))}
 			</Tbody>
 		</Table>
 	);

@@ -1,6 +1,7 @@
 import React from 'react';
 import {
-	Box, Checkbox,
+	Box,
+	Checkbox,
 	HStack,
 } from '@chakra-ui/react';
 import store, { useAppSelector } from '../../../store/store';
