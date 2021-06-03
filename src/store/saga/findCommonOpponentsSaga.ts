@@ -4,9 +4,10 @@ import store from '../store';
 import { PATHWAY_DELIMITER } from '../../consts/PATHWAY_DELIMITER';
 import { timeout } from '../../utils/timeoutPromise';
 import { OpponentsLookupByTeam } from '../../types/OpponentsLookupByTeam';
-import { addSimHistoryItem, SimHistoryRunDetails } from '../slices/simHistorySlice';
+import { addSimHistoryItem } from '../slices/simHistorySlice';
 import { setSimFailedResults, setSimPendingResults, setSimResults } from '../slices/simSlice';
 import type { SimResults } from '../slices/simSlice';
+import type { SimHistoryRunDetails } from '../../types/SimHistoryRunDetails';
 
 /**
  * A data node that represents the pathway of related opponents that potentially connects the target teams.

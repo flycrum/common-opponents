@@ -3,9 +3,10 @@ import { DevDashboardCard } from '../components/DevDashboardCard';
 import { DevSimChartContainer } from './DevSimChartContainer';
 import { useAppSelector } from '../../../store/store';
 import { Box, Text } from '@chakra-ui/react';
+import { simHistorySelectors } from '../../../store/slices/simHistorySlice';
 
 export const DevSimDashboardCard: React.FC<{onClick: () => void, onCloseModal: () => void}> = ({ onClick, onCloseModal }) => {
-	const { runs } = useAppSelector((state) => state.simHistory);
+	const runs = useAppSelector(simHistorySelectors.selectAll);
 
 	return (
 		<DevDashboardCard

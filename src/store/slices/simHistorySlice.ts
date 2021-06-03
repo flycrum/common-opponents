@@ -1,21 +1,16 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { ApiTeamsResponseTeamItem } from '../../types/apiTeams';
+import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { SimHistoryRunDetails } from '../../types/SimHistoryRunDetails';
+import { AppState } from '../store';
 
-export type SimHistoryRunDetails = {
-	/** how long it took to generate the common opponent results **/
-	duration: number;
-	/** the unique id of the run **/
-	id: number;
-	/** the number of results **/
-	length: number;
-	/** first opponent searched **/
-	team1: ApiTeamsResponseTeamItem,
-	/** second opponent searched **/
-	team2: ApiTeamsResponseTeamItem,
-};
+export const simHistoryRunsEntityAdapter = createEntityAdapter<SimHistoryRunDetails>({
+	selectId: (runDetails) => runDetails.id,
+	/** sort by id in ascending order (a-b) **/
+	sortComparer: (a, b) => a.id - b.id,
+});
 
 /**
  * History of common opponent simulation runs (not for any real reason other than it's interesting to chart).
+ * @persisted
  */
 export const simHistorySlice = createSlice({
 	name: 'simHistory',
@@ -23,21 +18,33 @@ export const simHistorySlice = createSlice({
 		/** incremental count of run that's also used as id for individual item **/
 		count: 0,
 		/** ordered list of simulation runs **/
-		runs: [] as SimHistoryRunDetails[],
+		runs: simHistoryRunsEntityAdapter.getInitialState(),
 	},
 	reducers: {
 		addSimHistoryItem: (state, action: PayloadAction<SimHistoryRunDetails>) => {
 			state.count += 1;
 			action.payload.id = state.count;
-			state.runs.push(action.payload);
+			simHistoryRunsEntityAdapter.addOne(state.runs, action.payload);
 		},
 		clearSimHistory: (state) => {
-			state.runs = [];
+			simHistoryRunsEntityAdapter.removeAll(state.runs);
+		},
+		removeSimHistoryItem: (state, action: PayloadAction<number>) => {
+			simHistoryRunsEntityAdapter.removeOne(state.runs, action.payload);
 		},
 	},
 });
 
+/**
+ * Entity convenience selectors like 'selectAll'.
+ */
+export const simHistorySelectors = simHistoryRunsEntityAdapter.getSelectors<AppState>(
+	(state) => state.simHistory.runs,
+);
+
+
 export const {
 	addSimHistoryItem,
 	clearSimHistory,
+	removeSimHistoryItem,
 } = simHistorySlice.actions;

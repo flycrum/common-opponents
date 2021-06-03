@@ -16,7 +16,7 @@ import type { AppState } from '../store';
  */
 const teamsEntityAdapter = createEntityAdapter<ApiTeamsResponseTeamItem>({
 	// Allow for lookups on `nickname` rather than `id`
-	selectId: (book) => book.team.nickname,
+	selectId: (team) => team.team.nickname,
 	// Keep the "all IDs" array sorted based on team nickname
 	sortComparer: (a, b) => a.team.nickname.localeCompare(b.team.nickname),
 });

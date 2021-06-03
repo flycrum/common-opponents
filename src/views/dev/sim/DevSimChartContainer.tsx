@@ -31,8 +31,12 @@ import {
 	AlertDialogHeader,
 	AlertDialogOverlay,
 	Box,
-	Button, ButtonGroup, Heading, HStack,
-	Text, VStack,
+	Button,
+	ButtonGroup,
+	Heading,
+	HStack,
+	Text,
+	VStack,
 } from '@chakra-ui/react';
 import { setSimTeam1, setSimTeam2 } from '../../../store/slices/simSlice';
 import { routePaths } from '../../../consts/routePaths';
@@ -40,8 +44,9 @@ import { useHistory } from 'react-router-dom';
 import { renderSimRunDuration } from './DevSimPanel';
 import { AiOutlineDotChart, AiOutlineLineChart } from 'react-icons/all';
 import { FaRegTrashAlt } from 'react-icons/fa';
-import { clearSimHistory } from '../../../store/slices/simHistorySlice';
+import { clearSimHistory, simHistorySelectors } from '../../../store/slices/simHistorySlice';
 import { DevBulkRunsButton } from '../components/DevBulkRunsButton';
+import type { SimHistoryRunDetails } from '../../../types/SimHistoryRunDetails';
 
 /**
  * Chart to display find opponent sim runs.
@@ -49,10 +54,10 @@ import { DevBulkRunsButton } from '../components/DevBulkRunsButton';
  */
 export const DevSimChartContainer: React.FC<{ isFull: boolean, onCloseModal: () => void}> = ({ isFull, onCloseModal }) => {
 	const dispatch = useAppDispatch();
-	const { runs } = useAppSelector((state) => state.simHistory);
+	const runs = useAppSelector(simHistorySelectors.selectAll);
 	const history = useHistory();
 	const [ isShowingChartLine, toggleChartType ] = useBoolean(true);
-	const [ alertDetails, setAlertDetails ] = React.useState(null as null | typeof runs[0]);
+	const [ alertDetails, setAlertDetails ] = React.useState(null as null | SimHistoryRunDetails);
 	const alertCancelRef = React.useRef<HTMLButtonElement | null>(null);
 	const tooltipClassName = useCss({
 		'--color-tooltip': theme.colors.gray['600'], // background
@@ -222,7 +227,11 @@ export const DevSimChartContainer: React.FC<{ isFull: boolean, onCloseModal: () 
 													offset: '5px, 5px'
 												}}
 												content={({ id, metadata }:
-													{ id: ChartDataShape['id'], metadata: typeof runs[0], y: ChartDataShape['data'] }
+													{
+														id: ChartDataShape['id'],
+														metadata: SimHistoryRunDetails,
+														y: ChartDataShape['data'],
+													}
 												) => (
 													<TooltipTemplate
 														className={tooltipClassName}
@@ -303,7 +312,11 @@ export const DevSimChartContainer: React.FC<{ isFull: boolean, onCloseModal: () 
 													offset: '5px, 5px'
 												}}
 												content={({ id, metadata }:
-													{ id: ChartDataShape['id'], metadata: typeof runs[0], y: ChartDataShape['data'] }
+													{
+														id: ChartDataShape['id'],
+														metadata: SimHistoryRunDetails,
+														y: ChartDataShape['data'],
+													}
 												) => (
 													<TooltipTemplate
 														className={tooltipClassName}

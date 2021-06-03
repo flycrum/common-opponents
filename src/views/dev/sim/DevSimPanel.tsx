@@ -1,6 +1,8 @@
 import React from 'react';
 import {
 	Box,
+	ButtonGroup,
+	IconButton,
 	Table,
 	Tbody,
 	Td,
@@ -9,12 +11,14 @@ import {
 	Thead,
 	Tr,
 } from '@chakra-ui/react';
-import { useAppSelector } from '../../../store/store';
+import { useAppDispatch, useAppSelector } from '../../../store/store';
 import { WarningBadge } from '../../components/WarningBadge';
 import { NegativeBadge } from '../../components/NegativeBadge';
 import { DevSimChartContainer } from './DevSimChartContainer';
-import type { SimHistoryRunDetails } from '../../../store/slices/simHistorySlice';
 import { DevBulkRunsButton } from '../components/DevBulkRunsButton';
+import { FaRegTrashAlt } from 'react-icons/fa';
+import type { SimHistoryRunDetails } from '../../../types/SimHistoryRunDetails';
+import { removeSimHistoryItem, simHistorySelectors } from '../../../store/slices/simHistorySlice';
 
 export const renderSimRunDuration = (runDetails: SimHistoryRunDetails) => (
 	runDetails.duration < 200
@@ -36,7 +40,8 @@ export const renderSimRunDuration = (runDetails: SimHistoryRunDetails) => (
  * The sim's panel within dev tools.
  */
 export const DevSimPanel: React.FC<{ onCloseModal: () => void }> = ({ onCloseModal }) => {
-	const { runs } = useAppSelector((state) => state.simHistory);
+	const dispatch = useAppDispatch();
+	const runs = useAppSelector(simHistorySelectors.selectAll);
 
 	return (
 		<Box height={'full'}>
@@ -84,6 +89,9 @@ export const DevSimPanel: React.FC<{ onCloseModal: () => void }> = ({ onCloseMod
 									<Th>
 										Matchup
 									</Th>
+									<Th isNumeric>
+										Actions
+									</Th>
 								</Tr>
 							</Thead>
 							<Tbody>
@@ -104,6 +112,18 @@ export const DevSimPanel: React.FC<{ onCloseModal: () => void }> = ({ onCloseMod
 											vs.
 											{ ' ' }
 											{ runDetails.team2.team.nickname }
+										</Td>
+										<Td isNumeric>
+											<ButtonGroup>
+												<IconButton
+													size={'xs'}
+													variant="outline"
+													icon={<FaRegTrashAlt />}
+													colorScheme="red"
+													aria-label="Delete run item"
+													onClick={() => dispatch(removeSimHistoryItem(runDetails.id))}
+												/>
+											</ButtonGroup>
 										</Td>
 									</Tr>
 								))}
