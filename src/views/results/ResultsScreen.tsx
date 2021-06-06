@@ -70,7 +70,7 @@ export const ResultsScreen = () => {
 
 	return (
 		<VStack minH={'100vh'}>
-			<ResultsScreenHeader />
+			<ResultsScreenHeader resultsLength={results?.length ?? null} />
 			<Box
 				flexGrow={1}
 				height={0} // this may seem odd but is a flexbox height fix hack for children

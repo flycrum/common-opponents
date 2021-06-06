@@ -8,7 +8,11 @@ import {
 import { FaChevronLeft } from 'react-icons/fa';
 import { useHistory, useLocation } from 'react-router-dom';
 
-export const ResultsScreenHeader = () => {
+interface Props {
+	resultsLength: number | null;
+}
+
+export const ResultsScreenHeader: React.FC<Props> = ({ resultsLength }) => {
 	const location = useLocation();
 	const history = useHistory();
 
@@ -36,6 +40,7 @@ export const ResultsScreenHeader = () => {
 			/>
 			<Heading as="h1">
 				Results
+				{!!resultsLength && ` (${resultsLength})`}
 			</Heading>
 			<Box width={'48px'} />
 		</HStack>
